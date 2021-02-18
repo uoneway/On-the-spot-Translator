@@ -18,6 +18,16 @@
         }
     }, false);
 
+    document.addEventListener("click", function(event){
+        if((event.altKey && metaKey == "Alt")
+            || (event.ctrlKey && metaKey == "Ctrl")
+            || (event.shiftKey && metaKey == "Shift")) { 
+            insertTranslateBox(event.target);
+            event.preventDefault();  //클릭 시 보통 발생하는 링크 이동 등을 막아주기 위해
+        }
+    }, false);
+
+
     function updateMetaKey(){
         chrome.storage.sync.get({
             metaKey: 'Alt',
@@ -48,4 +58,26 @@
         // console.log(text.trim());
     }
 
+    function insertTranslateBox(clickedElement){
+        var translateBox = document.createElement("div");
+        translateBox.className = "translateBox";
+
+        var text = getText(clickedElement.firstChild, "\r\n").trim();        
+        $(translateBox).text(text);
+
+        translateBox.style.border = "solid 2px green";
+        translateBox.style.borderRadius = "5px";
+        translateBox.style.zIndex = "99999";
+        translateBox.style.pointerEvents = "none";
+        translateBox.style.backgroundColor = "#252424";
+        translateBox.style.color = "#b1b1b1";
+
+        try{
+            clickedElement.appendChild(translateBox);
+            
+        }finally{
+            $(".borderBox").remove();
+            console.log(translateBox);
+        }
+    }
 })();
