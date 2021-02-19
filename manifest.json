@@ -1,6 +1,6 @@
 {
   "name": "Translator except Name",
-  "version": "0.0.1",
+  "version": "0.1",
   "manifest_version": 2,
   "description": "Easily select sentences by mouse over and click, then can see the translated result keeping original named entity.",
   "default_locale": "en",
@@ -8,23 +8,34 @@
   "permissions" : [
     "http://*/*", 
     "https://*/*", 
-    "storage", 
-    "clipboardWrite"
+    "https://openapi.naver.com/*",
+    "storage"
+    // "clipboardWrite",
   ],
+
+  "browser_action": {
+    "default_icon": "icon.png",
+    "default_popup": "options.html",
+    "default_title": "Generate a maze!"
+  },
   
   "icons" : {
     "48" : "icon.png"
   },
+
+  "background": {
+		"scripts": ["background.js",
+      "./external_modules/axios.min.js"]
+	},
   
   "content_scripts": [
         {
-            "matches": [
+            "matches": [  // 어떠한 사이트에서 작동할 것인지
                 "http://*/*", 
                 "https://*/*"
             ],
             "js": [
-                "jquery-2.2.0.min.js",
-                "menu.js",
+                "./external_modules/jquery-2.2.0.min.js",
                 "content.js"
             ],
             "run_at" : "document_start"
