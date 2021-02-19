@@ -18,58 +18,79 @@
 //     chrome.tabs.sendMessage(tab.id, msg)
 // }
 
+let naver_api_client_id;
+let naver_api_client_secret;
+updateNaverApiInfo();
 
-function getTranslateResult(request, sender, sendResponse){
-    // var lang = request.target_lang
-    // var text = request.source_text
+chrome.storage.onChanged.addListener(function(changes, areaName){
+    if(areaName == "sync"){
+        updateNaverApiInfo();
+    }
+})
 
-    var client_id = "PwtsQmgHn5h50GCthwtj";
-    var client_secret = "zNWtEXWpt_";
-    var url = "https://openapi.naver.com/v1/papago/n2mt";
-    var header = {
-        // "Content-Type": 'application/x-www-form-urlencoded; charset=UTF-8',
-        'Content-Type': 'application/json',
-        "X-Naver-Client-Id":client_id,
-        "X-Naver-Client-Secret":client_secret
-    };
+function updateNaverApiInfo(){
+    chrome.storage.sync.get({
+        naver_api_client_id: '',
+        naver_api_client_secret: '',
+    }, function(items) {
+        naver_api_client_id = items.naver_api_client_id;
+        naver_api_client_secret = items.naver_api_client_secret;
+        // console.log(naver_api_client_id)
+        // console.log(naver_api_client_secret)
+    });
+};
 
-    // var data = {'text' : text,
-    //         'source' : 'ko',
-    //         'target': lang};
-    console.log("aaaaaaa");
+// function getTranslateResult(request, sender, sendResponse){
+//     // var lang = request.target_lang
+//     // var text = request.source_text
 
-    // const userAction = async () => {
-    //     const response = await fetch(url, {
-    //         method: 'POST',
-    //         data: JSON.stringify(data), // string or object
-    //         headers: header
-    //         }
-    //     );
-    //     const myJson = await response.json(); //extract JSON from the http response
-    //     console.log(myJson)
-    //     console.log("bbbbbbb")
-    // }
+//     var client_id = naver_api_client_id;
+//     var client_secret = naver_api_client_secret;
+//     var url = "https://openapi.naver.com/v1/papago/n2mt";
+//     var header = {
+//         // "Content-Type": 'application/x-www-form-urlencoded; charset=UTF-8',
+//         'Content-Type': 'application/json',
+//         "X-Naver-Client-Id":client_id,
+//         "X-Naver-Client-Secret":client_secret
+//     };
+
+//     // var data = {'text' : text,
+//     //         'source' : 'ko',
+//     //         'target': lang};
+//     console.log("aaaaaaa");
+
+//     // const userAction = async () => {
+//     //     const response = await fetch(url, {
+//     //         method: 'POST',
+//     //         data: JSON.stringify(data), // string or object
+//     //         headers: header
+//     //         }
+//     //     );
+//     //     const myJson = await response.json(); //extract JSON from the http response
+//     //     console.log(myJson)
+//     //     console.log("bbbbbbb")
+//     // }
 
 
-    fetch(url, {
-        method: "POST",
-        headers: header,
-        body: JSON.stringify({
-            'text' : "우리나라는 좋은나라다",
-            'source' : 'ko',
-            'target': "en"
-        }), 
+//     fetch(url, {
+//         method: "POST",
+//         headers: header,
+//         body: JSON.stringify({
+//             'text' : "우리나라는 좋은나라다",
+//             'source' : 'ko',
+//             'target': "en"
+//         }), 
         
-    }).then(response => console.log(response))
-    .catch(error => console.error(error));
-        //.then(responseText => sendResponse(responseText))
+//     }).then(response => console.log(response))
+//     .catch(error => console.error(error));
+//         //.then(responseText => sendResponse(responseText))
     
-    //const myJson = response.json(); //extract JSON from the http response
-    //console.log(response);
-    console.log("bbbbbbb");
-    return true;
+//     //const myJson = response.json(); //extract JSON from the http response
+//     //console.log(response);
+//     console.log("bbbbbbb");
+//     return true;
     
-}
+// }
 
 
 // const axios = require('axios');
@@ -106,15 +127,13 @@ class Translator {
     }
 }
 
-// NOTE: populate with your own Client id/secret from https://developers.naver.com/apps
-const translator = new Translator({
-    NAVER_CLIENT_ID: "PwtsQmgHn5h50GCthwtj",
-    NAVER_CLIENT_SECRET: "zNWtEXWpt_",
-
-});
-
 
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+    const translator = new Translator({
+        NAVER_CLIENT_ID: naver_api_client_id,
+        NAVER_CLIENT_SECRET: naver_api_client_secret,
+    
+    });
     translator.translate(request.source_text, "en", request.target_lang)
     .then(function(response){
         sendResponse({"translated_text": response});
@@ -123,8 +142,23 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
         // console.log(error.name)
         // console.log(error.stack)
         //console.error(error.message);
-        console.log(error.message);
-        sendResponse({"error": "❗ You exceeded daily translation limit. This translator use naver papago API which available to 10,000 characters per day."});
+
+        let error_msg = error.message
+        console.log(error_msg);
+
+        let n = error_msg.split(" ")
+        let error_code = n[n.length - 1];
+        console.log(error_code);
+        if (error_code == '401'){
+            sendResponse({"error": "❗ Authentication failed: Please check if the 'Naver Papago API application info' is correct"});
+        }else if (error_code == '403'){
+            sendResponse({"error": "❗ Please check if 'Papago Translation' API is added in the 'API setting' tab at Naver Developer Center website(https://developers.naver.com/apps)."});
+        }else if (error_code == '429'){
+            sendResponse({"error": "❗ Used up all your daily data: This translator use Naver Papago API which provide only 10,000 characters translation per a day."});
+        }else{
+            sendResponse({"error": "❗ Error: Some problem occured at Naver Papago API application. Please try again"});
+        }
+
     });
     return true;
 });

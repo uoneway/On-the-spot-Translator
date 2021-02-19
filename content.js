@@ -11,8 +11,12 @@ chrome.storage.onChanged.addListener(function(changes, areaName){
 function updateMetaKey(){
     chrome.storage.sync.get({
         metaKey: 'Alt',
+        // naver_api_client_id: '',
+        // naver_api_client_secret: '',
     }, function(items) {
         metaKey = items.metaKey;
+        // naver_api_client_id = items.naver_api_client_id;
+        // naver_api_client_secret = items.naver_api_client_secret;
     });
 };
 
@@ -65,7 +69,7 @@ function insertTranslateBox(clickedElement){
     let translateBox = document.createElement("div");
     translateBox.className = "translateBox";
 
-    let text = getText(clickedElement.firstChild, "\r\n").trim();        
+    let text = getText(clickedElement.firstChild, "\r\n").trim();  
     
     translateBox.style.border = "solid 2px white";
     translateBox.style.borderRadius = "5px";
@@ -80,6 +84,13 @@ function insertTranslateBox(clickedElement){
         // getTranslateResult(text, 'en');
         // main();
         // chrome.runtime.onMessage.addListener(gotMessage)
+        if(text.length > 1000){
+            let error_text = "Only can translate up to 1,000 characters at once."
+            // console.error(error_text)
+            $(translateBox).text(error_text);
+            return false
+        }      
+
         chrome.runtime.sendMessage({//goes to bg_page.js. 크롬 익스텐션에서는 그냥 보내면 backgroud.js로 보내는걸로 정해져 있는듯함
                 source_text: text,
                 target_lang: "ko"
