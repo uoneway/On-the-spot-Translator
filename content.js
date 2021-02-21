@@ -50,7 +50,7 @@ function drawSourceBox(overedElement){
     sourceBox.style.pointerEvents = "none";
     document.body.appendChild(sourceBox);
     
-    //$(borderBox).fadeIn(300, "swing").delay(500).fadeOut(500, "swing");
+    $(sourceBox).fadeIn(300, "swing").delay(1000).fadeOut(1000, "swing");
     // console.log(text.trim());
 }
 
@@ -97,7 +97,7 @@ function insertTranslateBox(clickedElement){
             },
             function(response) {
                 if (response.translated_text != undefined){
-                    $(translateBox).text(response.translated_text);
+                    $(translateBox).text("✔ " + response.translated_text);
                 }else{
                     console.log(response.error);
                     $(translateBox).text(response.error);
