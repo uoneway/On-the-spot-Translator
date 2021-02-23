@@ -69,7 +69,7 @@ function insertTranslateBox(clickedElement){
     let translateBox = document.createElement("div");
     translateBox.className = "translateBox";
 
-    let text = getText(clickedElement.firstChild, "\r\n").trim();  
+    let text = getText(clickedElement.firstChild, "\n").trim();  // "\r\n"
     
     translateBox.style.border = "solid 2px white";
     translateBox.style.borderRadius = "5px";
@@ -116,7 +116,7 @@ function getText(node, lineSeparator){
     let text = "";
     while(node != null){
         if(node.nodeType == Node.TEXT_NODE){
-            text += node.nodeValue.trim();
+            text += removeLineSeparator(node.nodeValue) // node.nodeValue.trim();
         }else if(node.nodeType == Node.ELEMENT_NODE){
             if($(node).is(':visible')){
                 let childText = ""; 
@@ -132,7 +132,7 @@ function getText(node, lineSeparator){
                 }
 
                 if(childText != ""){
-                    text += childText;
+                    text += removeLineSeparator(childText);
                 }
 
                 if(node.nodeName == "BR" || window.getComputedStyle(node, null).display.indexOf("inline") === -1){
@@ -145,4 +145,8 @@ function getText(node, lineSeparator){
     }
 
     return text.trim();
+}
+
+function removeLineSeparator(text){
+    return text.replace(/\n/g, ' ');
 }
