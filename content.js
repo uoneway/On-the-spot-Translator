@@ -50,7 +50,7 @@ function drawSourceBox(overedElement){
     sourceBox.style.pointerEvents = "none";
     document.body.appendChild(sourceBox);
     
-    $(sourceBox).fadeIn(300, "swing").delay(1000).fadeOut(1000, "swing");
+    $(sourceBox).fadeIn(300, "swing").delay(600).fadeOut(500, "swing");
     // console.log(text.trim());
 }
 
