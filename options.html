@@ -1,17 +1,18 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Translator except Name</title>
+    <title>On the spot Translator</title>
     <meta charset="UTF-8">
     <style>
         div.title_div{
-            background-color: black;
             padding: 7px;
             text-align: center;
+            border-bottom: 1px solid royalblue;
         }
         span.title{
-            color: white;
+            color: royalblue;
             font-size: 27px;
+            font-style: italic;
         }
         label.input_label{
             display: inline-block;
@@ -23,7 +24,6 @@
         }
         div.descript_div{
             text-align: right;
-            margin-top: 15px;
         }
         span.descript{
             font-size: 15px;
@@ -31,14 +31,14 @@
     </style>
 </head>
 <body>
-    <div style="font-size:large;width: 400px;background-color: yellowgreen;">
+    <div style="font-size:large;width: 400px;">
         <div class="title_div">
-            <span class="title">Translator except Name</span>
+            <span class="title">On the spot Translator</span>
         </div>
         <div style="padding: 0px 20px 20px 20px;">                             
             <div style="font-size:large;">
                 <h3 id="hot_key_title">Hot keys</h3>
-                <label for="meta_key_label" class="input_label">Client ID:</label>
+                <label for="meta_key_label" class="input_label">To translate:</label>
                 <select class="input_box" id="meta_key">
                    <option value="Alt">Alt + Click</option>
                    <option value="Ctrl">Ctrl + Click</option>
@@ -55,13 +55,24 @@
                         <input class="input_box" type="password" id="naver_api_client_secret" name="naver_api_client_secret">
                 </form>
             </div>
-            
-        <div class="descript_div" >
-            <span class="descript">🔎 How to get Naver Papago API keys</span>
+       </div>
+
+       <div class="descript_div">
+        <a href="https://chrome.google.com/webstore/detail/on-the-spot-Translator/bgljcgcfhppljahbdkfgeldgfdjknpfa">
+            <img src="https://www.flaticon.com/svg/vstatic/svg/2105/2105000.svg?token=exp=1614092040~hmac=f01f0451f3006d09b8fbb483b6acd7ad" 
+            style="width: 65px;float: left;">
+        </a>
+        <div style="padding-top: 10px;">
+            <span class="descript">
+                🔎 <a href="https://www.notion.so/uoneway/On-the-spot-Translator-1826d87aa2d845d093793cee0ca11b29" target="_blank">
+                    How to get Naver Papago API keys
+                </a>
+            </span>
             <!-- NOTE: populate with your own Client id/secret from https://developers.naver.com/apps-->
             </br>
-            <span class="descript">✔ Your modifications will be saved automatically.</span>
-        </div></div>
+            <span class="descript">✔ Your changes will be saved automatically.</span>
+        </div>
+    </div>
         
     </div>
 
