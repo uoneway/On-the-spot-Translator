@@ -40,6 +40,7 @@ function updateNaverApiInfo(){
     });
 };
 
+//// 네이버로 직접 요청
 // function getTranslateResult(request, sender, sendResponse){
 //     // var lang = request.target_lang
 //     // var text = request.source_text
@@ -100,30 +101,40 @@ function updateNaverApiInfo(){
 class Translator {
     static url = "https://openapi.naver.com/v1/papago/n2mt";
 
-    constructor(client_config) {
+    constructor(params) {
         this.config = {
             headers: {
                 'content-type': 'application/json; charset=UTF-8',
-                'x-naver-client-id': client_config.NAVER_CLIENT_ID,
-                'x-naver-client-secret': client_config.NAVER_CLIENT_SECRET,
+                // 'x-naver-client-id': params.NAVER_CLIENT_ID,
+                // 'x-naver-client-secret': params.NAVER_CLIENT_SECRET,
         }};
+        this.naver_api_client_id = params.NAVER_CLIENT_ID
+        this.naver_api_client_secret = params.NAVER_CLIENT_SECRET
     }
+
     
-    async translate(source_text, source_lang, target_lang) {
-        if (this.config == null) {
+    async translate(source_text, target_lang) {
+        if (this.config == '') {
             throw new Error('Papago instance should be initialized with config first');
         } if (source_text == null) {
             throw new Error('Search source_text should be provided as lookup arguments');
         }
 
         const params = JSON.stringify({
-            source: source_lang,
-            target: target_lang,
-            text: source_text,
+            "data": {
+                "source_text": source_text
+                //"target_lang": target_lang
+            },
+            "api_client_info": {
+                "id": this.naver_api_client_id,
+                "secret": this.naver_api_client_secret
+            }
         });
 
         const response = await axios.post(Translator.url, params, this.config);
-        return response.data.message.result.translatedText;
+        console.log(response)
+        return {'translatedText': response.data.message.result.translatedText,
+                 'api_rescode': response.data.message.result.api_rescode}
     }
 }
 
@@ -134,9 +145,12 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
         NAVER_CLIENT_SECRET: naver_api_client_secret,
     
     });
-    translator.translate(request.source_text, "en", request.target_lang)
+
+    translator.translate(request.source_text, request.target_lang)
     .then(function(response){
-        sendResponse({"translated_text": response});
+        // console.log("aaaa", response)
+        sendResponse({"translated_text": response.translatedText,
+                        "api_rescode": response.api_rescode,});
     }).catch(function(error) {
         // console.log(error)
         // console.log(error.name)
@@ -145,28 +159,22 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 
         let error_msg = error.message
         console.log(error_msg);
-
-        let n = error_msg.split(" ")
-        let error_code = n[n.length - 1];
-        console.log(error_code);
-        if (error_code == '401'){
-            sendResponse({"error": "❗ Authentication failed: Please check if the 'Naver Papago API application info' is correct"});
-        }else if (error_code == '403'){
-            sendResponse({"error": "❗ Please check if 'Papago Translation' API is added in the 'API setting' tab at Naver Developer Center website(https://developers.naver.com/apps)."});
-        }else if (error_code == '429'){
-            sendResponse({"error": "❗ Used up all your daily data: This translator use Naver Papago API which provide only 10,000 characters translation per a day."});
-        }else{
-            sendResponse({"error": "❗ Error: Some problem occured at Naver Papago API application. Please try again"});
-        }
+        
+        // papago에 바로 요청할 때
+        // let n = error_msg.split(" ")
+        // let error_code = n[n.length - 1];
+        // console.log(error_code);
+        // if (error_code == '401'){
+        //     sendResponse({"error": "❗ Authentication failed: Please check if the 'Naver Papago API application info' is correct"});
+        // }else if (error_code == '403'){
+        //     sendResponse({"error": "❗ Please check if 'Papago Translation' API is added in the 'API setting' tab at Naver Developer Center website(https://developers.naver.com/apps)."});
+        // }else if (error_code == '429'){
+        //     sendResponse({"error": "❗ Used up all your daily data: This translator use Naver Papago API which provide only 10,000 characters translation per a day."});
+        // }else{
+        //     sendResponse({"error": "❗ Error: Some problem occured at Naver Papago API application. Please try again"});
+        // }
+        sendResponse({"error": "❗ Error:"});
 
     });
     return true;
 });
-
-// async function main {
-//     let translated_text = await translator.translate(request.source_text, "en", request.target_lang);
-//     console.log(translated_text);
-
-//     sendResponse({"translated_text": translated_text});
-//     // return true;
-// }
