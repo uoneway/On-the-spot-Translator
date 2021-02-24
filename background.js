@@ -4,7 +4,6 @@ let naver_api_client_secret;
 updateNaverApiInfo();
 let translator;
 
-
 chrome.storage.onChanged.addListener(function(changes, areaName){
     if(areaName == "sync"){
         updateNaverApiInfo();
@@ -88,12 +87,9 @@ function updateNaverApiInfo(){
 // }
 
 
-// const axios = require('axios');
-// const qs = require('querystring');
-
-
 class Translator {
-    static url = "https://openapi.naver.com/v1/papago/n2mt";
+    static url = "https://on-the-spot-translator.herokuapp.com/translate";
+    // static url = "http://127.0.0.1:5000/translate";
 
     constructor(params) {
         this.config = {
