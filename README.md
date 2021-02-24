@@ -1,32 +1,49 @@
-#Copy Text without Selecting (Google Chrome Extension)
-Copy text without selecting. Easy and fast copy tool.
+# On the spot Translator (Google Chrome Extension)
 
-## Download
+Just click and get the translation right below which keeps named entity in the original text.
 
-* [Copy Text without Selecting - Chrome Web Store](https://chrome.google.com/webstore/detail/copy-text-without-selecti/obhagoegpnbklgknnmbglghkfdidegkl)
+## Usage & Features
 
-## Description
+- Hold down **Alt key** and **move the mouse cursor over** the desired text to translate.
+	
+	Then you **can see the yellow box** that tells you the range of the text.
+	
+	![image-20210224155925479](images/image-20210224155925479.png)
 
-If you install this add-on, you do not need to select a text.
-What is needed, just right-click and click "Copy" menu.
+- **By one click**(with Alt), you can **see the translation right below the original text** 
 
-This alone, the text of the point you click will be copied.
+  - In other words, you can **see the original and the translation at a glance**. So simple!
+  - Above all, the result **keeps named entity in the original text**.
+    This will help you understand the original text better, **especially with many jargon.**
 
-( Icon designed by: [Mouse Runner.com](http://www.mouserunner.com/ "Mouse Runner.com, Good Content, Free Resources") )
+  ![image-20210224160037537](images/image-20210224160037537.png)
 
-## For Firefox?
+- Currently, support English to Korean and Korean to English translation.
 
-* Source: [Copy text without selecting (Firefox addon)](https://github.com/YujiSoftware/copy-text-without-selecting)
-* Download: [Copy Text without Selecting :: Add-ons for Firefox](https://addons.mozilla.org/ja/firefox/addon/copy-text-without-selecting/)
+## Installation & Setting
 
-## License
+1. Download the "On the spot Translator" from Chrome Web Store
 
-The MIT License (MIT)
+   (Under Chrome Web Store review progress...)
 
-Copyright (c) 2016 YujiSoftware
+2. Get a Naver Papago API key and enter Put it in the extension option.
 
-Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+   This extension based on Naver Papago API. So you should
+   
+   - Get the application `Client ID` and `Client Secret` of Naver developers center.
+   - Enter them in this extension option.
 
-The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+For more detailed, see [this link](https://www.notion.so/uoneway/On-the-spot-Translator-1826d87aa2d845d093793cee0ca11b29).
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+## Update plan
+
+- Improve NER logic
+- Correct postposition after substitution token
+- Make User-defined dictionary function
+- Improve response speed
+
+## Related Project
+
+- The main part of the text processing is performed on REST-API server, **[ On-the-spot-Translator-Server](https://github.com/uoneway/On-the-spot-Translator-Server)**
+- The text extraction function from HTML is based on the [copy-text-without-selecting-chrome](https://github.com/YujiSoftware/copy-text-without-selecting-chrome) of [YujiSoftware](https://github.com/YujiSoftware). 
