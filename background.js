@@ -1,26 +1,9 @@
 
-// chrome.runtime.onMessage.addListener(
-//     function(request, sender, sendResponse) {
-//       console.log(sender.tab ?
-//                   "from a content script:" + sender.tab.url :
-//                   "from the extension");
-//       if (request.greeting == "hello")
-//         sendResponse({farewell: "goodbye"});
-//     });
-
-// function gotMessage(message, sender, sendResponse){
-//     console.log(message.target_lang)
-//     aaa(sender)
-// }
-
-// function aaa(tab){
-//     let msg = {txt: "hellow"}
-//     chrome.tabs.sendMessage(tab.id, msg)
-// }
-
 let naver_api_client_id;
 let naver_api_client_secret;
 updateNaverApiInfo();
+let translator;
+
 
 chrome.storage.onChanged.addListener(function(changes, areaName){
     if(areaName == "sync"){
@@ -29,7 +12,7 @@ chrome.storage.onChanged.addListener(function(changes, areaName){
 })
 
 function updateNaverApiInfo(){
-    chrome.storage.sync.get({
+    chrome.storage.sync.get({  // 이 함수 자체가 async하게 작동함. 그래서 여기 안에 Translator을 넣어놔야 api key 없데이트 된 값이 들어감
         naver_api_client_id: '',
         naver_api_client_secret: '',
     }, function(items) {
@@ -37,7 +20,18 @@ function updateNaverApiInfo(){
         naver_api_client_secret = items.naver_api_client_secret;
         // console.log(naver_api_client_id)
         // console.log(naver_api_client_secret)
-    });
+        
+        if(translator == undefined) {
+            // console.log("undefined")
+            translator = new Translator({
+                api_client_id: naver_api_client_id,
+                api_client_secret: naver_api_client_secret,
+            });
+        }else{
+            // console.log("defined")
+            translator.updateApiClinetInfo(naver_api_client_id, naver_api_client_secret);
+        }
+        });
 };
 
 //// 네이버로 직접 요청
@@ -108,11 +102,15 @@ class Translator {
                 // 'x-naver-client-id': params.NAVER_CLIENT_ID,
                 // 'x-naver-client-secret': params.NAVER_CLIENT_SECRET,
         }};
-        this.naver_api_client_id = params.NAVER_CLIENT_ID
-        this.naver_api_client_secret = params.NAVER_CLIENT_SECRET
+        this.api_client_id = params.api_client_id
+        this.api_client_secret = params.api_client_secret
     }
 
-    
+    updateApiClinetInfo(api_client_id, api_client_secret){
+        this.api_client_id = api_client_id
+        this.api_client_secret = api_client_secret
+    }
+
     async translate(source_text, target_lang) {
         if (this.config == '') {
             throw new Error('Papago instance should be initialized with config first');
@@ -126,13 +124,13 @@ class Translator {
                 //"target_lang": target_lang
             },
             "api_client_info": {
-                "id": this.naver_api_client_id,
-                "secret": this.naver_api_client_secret
+                "id": this.api_client_id,
+                "secret": this.api_client_secret
             }
         });
 
         const response = await axios.post(Translator.url, params, this.config);
-        console.log(response)
+
         return {'translatedText': response.data.message.result.translatedText,
                  'api_rescode': response.data.message.result.api_rescode}
     }
@@ -140,11 +138,6 @@ class Translator {
 
 
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-    const translator = new Translator({
-        NAVER_CLIENT_ID: naver_api_client_id,
-        NAVER_CLIENT_SECRET: naver_api_client_secret,
-    
-    });
 
     translator.translate(request.source_text, request.target_lang)
     .then(function(response){
