@@ -1,13 +1,12 @@
 {
-  "name": "On the spot Translator",
-  "version": "0.1.0",
+  "name": "__MSG_appName__",
+  "version": "0.1.1",
   "manifest_version": 2,
-  "description": "Just click the text, and get the translation right below which keeps named entity in the original text.",
+  "description": "__MSG_appDesc__",
   "default_locale": "en",
   
   "permissions" : [
-    "storage",
-    "activeTab"
+    "storage"
   ],
 
   "browser_action": {
