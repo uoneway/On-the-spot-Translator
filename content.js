@@ -43,7 +43,7 @@ function drawSourceBox(overedElement){
     sourceBox.style.left = (rect.left + window.scrollX) + "px";
     sourceBox.style.width = (rect.width - 4) + "px";
     sourceBox.style.height = (rect.height - 4) + "px";
-    sourceBox.style.border = "solid 2px gold";
+    sourceBox.style.border = "solid 2px royalblue";
     sourceBox.style.borderRadius = "5px";
     // sourceBox.style.fontSize = "smaller";
     sourceBox.style.zIndex = "99999";
@@ -66,10 +66,12 @@ document.addEventListener("click", function(event){
 }, false);
 
 function insertTranslateBox(clickedElement){
+
     let translateBox = document.createElement("div");
     translateBox.className = "translateBox";
-
+    
     let text = getText(clickedElement.firstChild, "\n").trim();  // "\r\n"
+    // console.log("text1", text)
     
     translateBox.style.border = "solid 2px white";
     translateBox.style.borderRadius = "5px";
@@ -90,8 +92,8 @@ function insertTranslateBox(clickedElement){
             $(translateBox).text(error_text);
             return false
         }      
-
-        chrome.runtime.sendMessage({//goes to bg_page.js. 크롬 익스텐션에서는 그냥 보내면 backgroud.js로 보내는걸로 정해져 있는듯함
+        // console.log("text2", text)
+        chrome.runtime.sendMessage({//goes to bg_page.js. 크롬 익스텐션에서는 그냥 sendMessage 보내면 backgroud.js로 보내는걸로 정해져 있는듯함
                 source_text: text,
                 target_lang: "ko"
             },
