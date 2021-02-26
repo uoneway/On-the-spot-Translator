@@ -1,4 +1,4 @@
-# On the spot Translator (Google Chrome Extension)
+# On the spot Translator (Chrome Extension)
 
 Just click and get the translation right below which keeps named entity in the original text.
 
@@ -45,5 +45,8 @@ For more detailed, see [this link](https://www.notion.so/uoneway/On-the-spot-Tra
 
 ## Related Project
 
-- The main part of the text processing is performed on REST-API server, **[ On-the-spot-Translator-Server](https://github.com/uoneway/On-the-spot-Translator-Server)**
+- The main part of the text processing is performed on REST-API server.
+
+  [![ReadMe Card](https://github-readme-stats.vercel.app/api/pin/?username=uoneway&repo=On-the-spot-Translator-API&show_owner=True)](https://github.com/uoneway/On-the-spot-Translator-API)
+
 - The text extraction function from HTML is based on the [copy-text-without-selecting-chrome](https://github.com/YujiSoftware/copy-text-without-selecting-chrome) of [YujiSoftware](https://github.com/YujiSoftware). 
