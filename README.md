@@ -39,9 +39,11 @@ For more detailed, see [this link](https://www.notion.so/uoneway/On-the-spot-Tra
 ## Update plan
 
 - Improve NER logic
-- Correct postposition after substitution token
-- Make User-defined dictionary function
+  - Make User-defined or domain-specific dictionary function
+  - Code detection
+  - Correct postposition after substitution token
 - Improve response speed
+
 
 ## Related Project
 
