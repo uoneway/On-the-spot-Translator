@@ -116,7 +116,7 @@ function insertTranslateBox(clickedElement){
                     if (response.api_rescode != undefined){  // heroku는 괜찮은데 papago 문제일 때
                         console.log(response.api_rescode);
                         error_msg = convert_papago_error_to_msg(response.api_rescode); //, "❗ ")
-                        $(translateBox).text(error_msg);
+                        $(translateBox).html(error_msg);
                     }else{
                         console.log(response.error);
                         $(translateBox).text(response.error);
@@ -132,16 +132,17 @@ function insertTranslateBox(clickedElement){
     }
 }
 
-
+// https://developers.naver.com/docs/common/openapiguide/errorcode.md#%EC%98%A4%EB%A5%98-%EB%A9%94%EC%8B%9C%EC%A7%80-%ED%98%95%EC%8B%9D
 function convert_papago_error_to_msg(error_code, prefix=''){
+    let forForDetail = "</br>For more details, click <a target='_blank' href='https://www.notion.so/uoneway/On-the-spot-Translator-1826d87aa2d845d093793cee0ca11b29' style='color: #008eff; pointer-events: all;'><u>here</u></a>"
     if (error_code == '401'){
-        error_msg = "🔎 Authentication failed: Please check your 'Naver API application info(Client ID and Client Secret)' in the option popup";
+        error_msg = "🔧 Authentication failed: </br>Please make sure you enter correct 'Naver API application info(Client ID and Client Secret)' in the option popup." + forForDetail;
     }else if (error_code == '403'){
-        error_msg = "🔎 Don't have the 'Papago Translation API' permission: Please access the Naver Developer Center website(https://developers.naver.com/apps), and check 'Papago Translation' is added in the 'API setting' tab.";
+        error_msg = "🔧 You don't have the 'Papago Translation API' permission: </br>Please add 'Papago Translation' on 'API setting' tab in the Naver Developer Center website." + forForDetail;
     }else if (error_code == '429'){
-        error_msg = "⏳ Used up all your daily usage: This translator use Naver Papago API which provide only 10,000 characters translation per a day.";
+        error_msg = "⏳ Used up all your daily usage: </br>This translator use Naver Papago API which provide only 10,000 characters translation per a day.";
     }else{
-        error_msg = "❗ Error: Some problem occured at Naver Papago API application. Please try it again later";
+        error_msg = "❗ Error: </br>Some problem occured at Naver Papago API application. Please try again in a few minutes";
     };
     return prefix + error_msg
 }
