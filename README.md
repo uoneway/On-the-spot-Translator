@@ -1,6 +1,12 @@
 # On the spot Translator (Chrome Extension)
 
-Just click and get the translation right below which keeps named entity in the original text.
+<a href="https://chrome.google.com/webstore/detail/on-the-spot-translator/bgljcgcfhppljahbdkfgeldgfdjknpfa" target="_blank"><img src="images/icon.png" height="100px" align="right"/></a>
+
+**Chrome extension** for **on the spot Translator**
+
+**Just click and get the translation right below which keeps named entity in the original text.**
+
+Install from ["On the spot Translator" page in Chrome Web Store](https://chrome.google.com/webstore/detail/on-the-spot-translator/bgljcgcfhppljahbdkfgeldgfdjknpfa)
 
 ## Usage & Features
 
@@ -22,9 +28,7 @@ Just click and get the translation right below which keeps named entity in the o
 
 ## Installation & Setting
 
-1. Download the "On the spot Translator" from Chrome Web Store
-
-   (Under Chrome Web Store review progress...)
+1. Download the ["On the spot Translator" in Chrome Web Store](https://chrome.google.com/webstore/detail/on-the-spot-translator/bgljcgcfhppljahbdkfgeldgfdjknpfa)
 
 2. Get a Naver Papago API key and enter Put it in the extension option.
 
@@ -38,11 +42,17 @@ For more detailed, see [this link](https://www.notion.so/uoneway/On-the-spot-Tra
 
 ## Update plan
 
-- Improve NER logic
-  - Make User-defined or domain-specific dictionary function
-  - Code detection
-  - Correct postposition after substitution token
-- Improve response speed
+- In progress...
+  - Improve NER logic
+  - Support multi-language
+  - Apply Google translation supplementary for exceed the usage limit of Naver papago.
+- Planning
+  - Improve response speed
+  - Apply for pdf
+  - Improve NER logic
+    - Make User-defined or domain-specific dictionary function
+    - Code detection
+    - Correct postposition after substitution token
 
 
 ## Related Project
