@@ -11,7 +11,7 @@ function restoreOptions() {
     metaKey: 'Alt',
     naver_api_client_id: "",
     naver_api_client_secret: ""
-  }, function(items) {
+  }, function (items) {
     document.getElementById("meta_key").value = items.metaKey;
     document.getElementById("naver_api_client_id").value = items.naver_api_client_id;
     document.getElementById("naver_api_client_secret").value = items.naver_api_client_secret;

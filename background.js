@@ -4,33 +4,33 @@ let naver_api_client_secret;
 updateNaverApiInfo();
 let translator;
 
-chrome.storage.onChanged.addListener(function(changes, areaName){
-    if(areaName == "sync"){
+chrome.storage.onChanged.addListener(function (changes, areaName) {
+    if (areaName == "sync") {
         updateNaverApiInfo();
     }
 })
 
-function updateNaverApiInfo(){
+function updateNaverApiInfo() {
     chrome.storage.sync.get({  // 이 함수 자체가 async하게 작동함. 그래서 여기 안에 Translator을 넣어놔야 api key 없데이트 된 값이 들어감
         naver_api_client_id: '',
         naver_api_client_secret: '',
-    }, function(items) {
+    }, function (items) {
         naver_api_client_id = items.naver_api_client_id;
         naver_api_client_secret = items.naver_api_client_secret;
         // console.log(naver_api_client_id)
         // console.log(naver_api_client_secret)
-        
-        if(translator == undefined) {
+
+        if (translator == undefined) {
             // console.log("undefined")
             translator = new Translator({
                 api_client_id: naver_api_client_id,
                 api_client_secret: naver_api_client_secret,
             });
-        }else{
+        } else {
             // console.log("defined")
             translator.updateApiClinetInfo(naver_api_client_id, naver_api_client_secret);
         }
-        });
+    });
 };
 
 //// 네이버로 직접 요청
@@ -74,16 +74,16 @@ function updateNaverApiInfo(){
 //             'source' : 'ko',
 //             'target': "en"
 //         }), 
-        
+
 //     }).then(response => console.log(response))
 //     .catch(error => console.error(error));
 //         //.then(responseText => sendResponse(responseText))
-    
+
 //     //const myJson = response.json(); //extract JSON from the http response
 //     //console.log(response);
 //     console.log("bbbbbbb");
 //     return true;
-    
+
 // }
 
 
@@ -97,12 +97,13 @@ class Translator {
                 'content-type': 'application/json; charset=UTF-8',
                 // 'x-naver-client-id': params.NAVER_CLIENT_ID,
                 // 'x-naver-client-secret': params.NAVER_CLIENT_SECRET,
-        }};
+            }
+        };
         this.api_client_id = params.api_client_id
         this.api_client_secret = params.api_client_secret
     }
 
-    updateApiClinetInfo(api_client_id, api_client_secret){
+    updateApiClinetInfo(api_client_id, api_client_secret) {
         this.api_client_id = api_client_id
         this.api_client_secret = api_client_secret
     }
@@ -127,8 +128,10 @@ class Translator {
 
         const response = await axios.post(Translator.url, params, this.config);
 
-        return {'translatedText': response.data.message.result.translatedText,
-                 'api_rescode': response.data.message.result.api_rescode}
+        return {
+            'translatedText': response.data.message.result.translatedText,
+            'api_rescode': response.data.message.result.api_rescode
+        }
     }
 }
 
@@ -136,34 +139,36 @@ class Translator {
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 
     translator.translate(request.source_text, request.target_lang)
-    .then(function(response){
-        // console.log("aaaa", response)
-        sendResponse({"translated_text": response.translatedText,
-                        "api_rescode": response.api_rescode,});
-    }).catch(function(error) {
-        // console.log(error)
-        // console.log(error.name)
-        // console.log(error.stack)
-        //console.error(error.message);
+        .then(function (response) {
+            // console.log("aaaa", response)
+            sendResponse({
+                "translated_text": response.translatedText,
+                "api_rescode": response.api_rescode,
+            });
+        }).catch(function (error) {
+            // console.log(error)
+            // console.log(error.name)
+            // console.log(error.stack)
+            //console.error(error.message);
 
-        let error_msg = error.message
-        console.log(error_msg);
-        
-        // papago에 바로 요청할 때
-        // let n = error_msg.split(" ")
-        // let error_code = n[n.length - 1];
-        // console.log(error_code);
-        // if (error_code == '401'){
-        //     sendResponse({"error": "❗ Authentication failed: Please check if the 'Naver Papago API application info' is correct"});
-        // }else if (error_code == '403'){
-        //     sendResponse({"error": "❗ Please check if 'Papago Translation' API is added in the 'API setting' tab at Naver Developer Center website(https://developers.naver.com/apps)."});
-        // }else if (error_code == '429'){
-        //     sendResponse({"error": "❗ Used up all your daily data: This translator use Naver Papago API which provide only 10,000 characters translation per a day."});
-        // }else{
-        //     sendResponse({"error": "❗ Error: Some problem occured at Naver Papago API application. Please try again"});
-        // }
-        sendResponse({"error": "❗ Error:"});
+            let error_msg = error.message
+            console.log(error_msg);
 
-    });
+            // papago에 바로 요청할 때
+            // let n = error_msg.split(" ")
+            // let error_code = n[n.length - 1];
+            // console.log(error_code);
+            // if (error_code == '401'){
+            //     sendResponse({"error": "❗ Authentication failed: Please check if the 'Naver Papago API application info' is correct"});
+            // }else if (error_code == '403'){
+            //     sendResponse({"error": "❗ Please check if 'Papago Translation' API is added in the 'API setting' tab at Naver Developer Center website(https://developers.naver.com/apps)."});
+            // }else if (error_code == '429'){
+            //     sendResponse({"error": "❗ Used up all your daily data: This translator use Naver Papago API which provide only 10,000 characters translation per a day."});
+            // }else{
+            //     sendResponse({"error": "❗ Error: Some problem occured at Naver Papago API application. Please try again"});
+            // }
+            sendResponse({ "error": "❗ Error:" });
+
+        });
     return true;
 });
