@@ -88,7 +88,7 @@ function updateNaverApiInfo() {
 
 
 class Translator {
-    static url = "https://on-the-spot-translator.herokuapp.com/translate";
+    static url = "https://port-0-on-the-spot-translator-api-p8xrq2mlfpd1iik.sel3.cloudtype.app/translate";
     // static url = "http://127.0.0.1:5000/translate";
 
     constructor(params) {
