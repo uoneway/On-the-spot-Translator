@@ -93,7 +93,7 @@ function insertTranslateBox(clickedElement) {
             $(translateBox).text(error_text);
             return false
         }
-        // console.log("text2", text)
+
         chrome.runtime.sendMessage({//goes to bg_page.js. 크롬 익스텐션에서는 그냥 sendMessage 보내면 backgroud.js로 보내는걸로 정해져 있는듯함
             source_text: text,
             target_lang: "ko"
@@ -107,7 +107,6 @@ function insertTranslateBox(clickedElement) {
                 //     console.log(response.error);
                 //     $(translateBox).text(response.error);
                 // }
-
 
                 if (response.translated_text != undefined) {  // ok
                     $(translateBox).text("✔ " + response.translated_text);
