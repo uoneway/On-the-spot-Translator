@@ -126,11 +126,15 @@ class Translator {
             }
         });
 
-        const response = await axios.post(Translator.url, params, this.config);
+        const response = await fetch(Translator.url, {
+            method: "POST",
+            headers: this.config.headers,
+            body: params
+        }).then((response) => response.json());
 
         return {
-            'translatedText': response.data.message.result.translatedText,
-            'api_rescode': response.data.message.result.api_rescode
+            'translatedText': response.message.result.translatedText,
+            'api_rescode': response.message.result.api_rescode
         }
     }
 }
@@ -140,7 +144,6 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 
     translator.translate(request.source_text, request.target_lang)
         .then(function (response) {
-            // console.log("aaaa", response)
             sendResponse({
                 "translated_text": response.translatedText,
                 "api_rescode": response.api_rescode,
