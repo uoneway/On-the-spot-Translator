@@ -86,7 +86,7 @@ function insertTranslateBox(clickedElement) {
         // getTranslateResult(text, 'en');
         // main();
         // chrome.runtime.onMessage.addListener(gotMessage)
-        let max_len = 1500
+        let max_len = 3000
         if (text.length > max_len) {
             let error_text = "Only can translate up to " + max_len + " characters at once."
             // console.error(error_text)
