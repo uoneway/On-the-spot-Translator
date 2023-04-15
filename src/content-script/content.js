@@ -1,4 +1,9 @@
+let MAX_REQ_LEN = 3000
+let TGT_LANG = "ko"
+
+
 // Set a meta key from icon popup
+let spotWorks;
 let metaKey;
 updateMetaKey();
 
@@ -22,12 +27,12 @@ function updateMetaKey() {
 
 
 // SourceBox
-let activatedSourceBox = false;
+let sourceBoxActivated = false;
 
 document.addEventListener("DOMContentLoaded", function () {
     document.addEventListener("mouseover", function (event) {
         // console.log("mouseover")
-        if (activatedSourceBox) {
+        if (sourceBoxActivated) {
             drawSourceBox(event.target);
             event.preventDefault();
         }
@@ -41,7 +46,7 @@ document.addEventListener("DOMContentLoaded", function () {
             let elements = document.querySelectorAll(":hover");
             if (elements.length > 0) {
                 drawSourceBox(elements[elements.length - 1]);
-                activatedSourceBox = true;
+                sourceBoxActivated = true;
             }
         }
     }, true);
@@ -51,7 +56,7 @@ document.addEventListener("DOMContentLoaded", function () {
         if ((!event.altKey && metaKey == "Alt")
             || (!event.ctrlKey && metaKey == "Ctrl")
             || (!event.shiftKey && metaKey == "Shift")) {
-            activatedSourceBox = false;
+            sourceBoxActivated = false;
             $(".sourceBox").remove();
             event.preventDefault();
         }
@@ -81,82 +86,93 @@ function drawSourceBox(overedElement) {
 }
 
 
-// Display a trasnlated text when click the source text
+// Req and Resp
 document.addEventListener("DOMContentLoaded", function () {
+    // document.addEventListener("keydown", function (event) {
+    //     if (((event.altKey && metaKey == "Alt")
+    //         || (event.ctrlKey && metaKey == "Ctrl")
+    //         || (event.shiftKey && metaKey == "Shift")) && event.key == "1") {
+    //         insertSpotBox(event.target);
+    //         event.preventDefault();  //클릭 시 보통 발생하는 링크 이동 등을 막아주기 위해
+    //     }
+    // }, false);
     document.addEventListener("click", function (event) {
         if ((event.altKey && metaKey == "Alt")
             || (event.ctrlKey && metaKey == "Ctrl")
             || (event.shiftKey && metaKey == "Shift")) {
-            insertTranslateBox(event.target);
+            insertSpotBox(event.target);
             event.preventDefault();  //클릭 시 보통 발생하는 링크 이동 등을 막아주기 위해
         }
     }, false);
 });
 
-function insertTranslateBox(clickedElement) {
+async function insertSpotBox(clickedElement) {
 
-    let translateBox = document.createElement("div");
-    translateBox.className = "translateBox";
+    let spotBox = document.createElement("div");
+    spotBox.className = "spotBox";
 
     let text = getText(clickedElement.firstChild, "\n").trim();  // "\r\n"
     // console.log("text1", text)
 
-    translateBox.style.border = "solid 2px white";
-    translateBox.style.borderRadius = "5px";
-    translateBox.style.padding = "5px";
-    translateBox.style.zIndex = "99999";
-    translateBox.style.pointerEvents = "none";
-    translateBox.style.backgroundColor = "#252424";
-    translateBox.style.color = "white";
+    spotBox.style.border = "solid 2px white";
+    spotBox.style.borderRadius = "5px";
+    spotBox.style.padding = "5px";
+    spotBox.style.zIndex = "99999";
+    spotBox.style.pointerEvents = "none";
+    spotBox.style.backgroundColor = "#252424";
+    spotBox.style.color = "white";
 
     try {
-        clickedElement.appendChild(translateBox);
-        // getTranslateResult(text, 'en');
-        // main();
-        // chrome.runtime.onMessage.addListener(gotMessage)
-        let max_len = 3000
-        if (text.length > max_len) {
-            let error_text = "Only can translate up to " + max_len + " characters at once."
+        clickedElement.appendChild(spotBox);
+
+        if (text.length > MAX_REQ_LEN) {
+            let error_text = "Only can translate up to " + MAX_REQ_LEN + " characters at once."
             // console.error(error_text)
-            $(translateBox).text(error_text);
+            $(spotBox).text(error_text);
             return false
         }
 
-        chrome.runtime.sendMessage({//goes to bg_page.js. 크롬 익스텐션에서는 그냥 sendMessage 보내면 backgroud.js로 보내는걸로 정해져 있는듯함
-            source_text: text,
-            target_lang: "ko"
-        },
-            function (response) {
-                // papago에 바로 요청할 때
-                // if (response.translated_text != undefined){
-                //     console.log(response.api_rescode)
-                //     $(translateBox).text("✔ " + response.translated_text);
-                // }else{
-                //     console.log(response.error);
-                //     $(translateBox).text(response.error);
-                // }
-
-                if (response.translated_text != undefined) {  // ok
-                    $(translateBox).text("✔ " + response.translated_text);
-
-                } else {
-                    if (response.api_rescode != undefined) {  // heroku는 괜찮은데 papago 문제일 때
-                        console.log(response.api_rescode);
-                        error_msg = convert_papago_error_to_msg(response.api_rescode); //, "❗ ")
-                        $(translateBox).html(error_msg);
-                    } else {
-                        console.log(response.error);
-                        $(translateBox).text(response.error);
-                    }
-                }
-
-                // console.log(response);  
-            });
+        req_server("spot", text, TGT_LANG, spotBox)
 
     } finally {
         $(".borderBox").remove();
-        // console.log(translateBox);
+        // console.log(spotBox);
     }
+}
+
+//goes to bg_page.js. 크롬 익스텐션에서는 그냥 sendMessage 보내면 backgroud.js로 보내는걸로 정해져 있는듯함
+async function req_server(reqType, srcText, tgtLang, tgtBoxCls) {
+    await chrome.runtime.sendMessage({
+        reqType: reqType,
+        srcText: srcText,  // data로 묶기
+        tgtLang: tgtLang,
+        tgtBoxCls: tgtBoxCls
+    },
+        function (response) {
+            // papago에 바로 요청할 때
+            // if (response.text != undefined){
+            //     console.log(response.ext_api_code)
+            //     $(tgtBoxCls).text("✔ " + response.text);
+            // }else{
+            //     console.log(response.error);
+            //     $(tgtBoxCls).text(response.error);
+            // }
+
+            if (response.text != undefined) {  // ok
+                $(tgtBoxCls).text("✔ " + response.text);
+
+            } else {
+                if (response.ext_api_code != undefined) {  // heroku는 괜찮은데 papago 문제일 때
+                    console.log(response.ext_api_code);
+                    error_msg = convert_papago_error_to_msg(response.ext_api_code); //, "❗ ")
+                    $(tgtBoxCls).html(error_msg);
+                } else {
+                    console.log(response.error);
+                    $(tgtBoxCls).text(response.error);
+                }
+            }
+            // console.log(response);  
+        });
 }
 
 // https://developers.naver.com/docs/common/openapiguide/errorcode.md#%EC%98%A4%EB%A5%98-%EB%A9%94%EC%8B%9C%EC%A7%80-%ED%98%95%EC%8B%9D
