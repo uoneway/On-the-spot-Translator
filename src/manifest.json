@@ -16,7 +16,7 @@
     "48": "images/icon.png"
   },
   "background": {
-    "service_worker": "background.js",
+    "service_worker": "background/background.js",
     "type": "module"
   },
   "content_scripts": [
@@ -25,8 +25,8 @@
         "<all_urls>"
       ],
       "js": [
-        "./external_modules/jquery-3.6.4.min.js",
-        "content.js"
+        "content-script/external/jquery-3.6.4.min.js",
+        "content-script/content.js"
       ],
       "run_at": "document_start"
     }
