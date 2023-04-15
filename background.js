@@ -1,8 +1,10 @@
 
 let naver_api_client_id;
 let naver_api_client_secret;
-updateNaverApiInfo();
+
+// 아래 순서 중요하며 먼저 실행해줘야 아래 onMessage.addListener에서 translator를 쓸 수 있음
 let translator;
+updateNaverApiInfo();
 
 chrome.storage.onChanged.addListener(function (changes, areaName) {
     if (areaName == "sync") {

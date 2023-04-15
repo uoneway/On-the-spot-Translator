@@ -26,6 +26,7 @@ let activatedSourceBox = false;
 
 document.addEventListener("DOMContentLoaded", function () {
     document.addEventListener("mouseover", function (event) {
+        // console.log("mouseover")
         if (activatedSourceBox) {
             drawSourceBox(event.target);
             event.preventDefault();
@@ -33,16 +34,20 @@ document.addEventListener("DOMContentLoaded", function () {
     }, false);
 
     document.addEventListener("keydown", function (event) {
+        // console.log("keydown")
         if ((event.altKey && metaKey == "Alt")
             || (event.ctrlKey && metaKey == "Ctrl")
             || (event.shiftKey && metaKey == "Shift")) {
-            activatedSourceBox = true;
             let elements = document.querySelectorAll(":hover");
-            drawSourceBox(elements[elements.length - 1]);
+            if (elements.length > 0) {
+                drawSourceBox(elements[elements.length - 1]);
+                activatedSourceBox = true;
+            }
         }
     }, true);
 
     document.addEventListener("keyup", function (event) {
+        // console.log("keyup")
         if ((!event.altKey && metaKey == "Alt")
             || (!event.ctrlKey && metaKey == "Ctrl")
             || (!event.shiftKey && metaKey == "Shift")) {
