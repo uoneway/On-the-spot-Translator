@@ -39,7 +39,6 @@ document.addEventListener("DOMContentLoaded", function () {
             activatedSourceBox = true;
             let elements = document.querySelectorAll(":hover");
             drawSourceBox(elements[elements.length - 1]);
-            event.preventDefault();
         }
     }, true);
 
