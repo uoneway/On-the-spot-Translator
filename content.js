@@ -21,15 +21,38 @@ function updateMetaKey() {
 };
 
 
-// Display a source text box when mouse over
-document.addEventListener("mouseover", function (event) {
-    if ((event.altKey && metaKey == "Alt")
-        || (event.ctrlKey && metaKey == "Ctrl")
-        || (event.shiftKey && metaKey == "Shift")) {
-        drawSourceBox(event.target);
-        event.preventDefault();
-    }
-}, false);
+// SourceBox
+let activatedSourceBox = false;
+
+document.addEventListener("DOMContentLoaded", function () {
+    document.addEventListener("mouseover", function (event) {
+        if (activatedSourceBox) {
+            drawSourceBox(event.target);
+            event.preventDefault();
+        }
+    }, false);
+
+    document.addEventListener("keydown", function (event) {
+        if ((event.altKey && metaKey == "Alt")
+            || (event.ctrlKey && metaKey == "Ctrl")
+            || (event.shiftKey && metaKey == "Shift")) {
+            activatedSourceBox = true;
+            let elements = document.querySelectorAll(":hover");
+            drawSourceBox(elements[elements.length - 1]);
+            event.preventDefault();
+        }
+    }, true);
+
+    document.addEventListener("keyup", function (event) {
+        if ((!event.altKey && metaKey == "Alt")
+            || (!event.ctrlKey && metaKey == "Ctrl")
+            || (!event.shiftKey && metaKey == "Shift")) {
+            activatedSourceBox = false;
+            $(".sourceBox").remove();
+            event.preventDefault();
+        }
+    }, true);
+});
 
 function drawSourceBox(overedElement) {
     // Remove before sourceBox
@@ -50,20 +73,21 @@ function drawSourceBox(overedElement) {
     sourceBox.style.pointerEvents = "none";
     document.body.appendChild(sourceBox);
 
-    $(sourceBox).fadeIn(300, "swing").delay(600).fadeOut(500, "swing");
-    // console.log(text.trim());
+    // $(sourceBox).fadeIn(300, "swing").delay(600).fadeOut(500, "swing");
 }
 
 
 // Display a trasnlated text when click the source text
-document.addEventListener("click", function (event) {
-    if ((event.altKey && metaKey == "Alt")
-        || (event.ctrlKey && metaKey == "Ctrl")
-        || (event.shiftKey && metaKey == "Shift")) {
-        insertTranslateBox(event.target);
-        event.preventDefault();  //클릭 시 보통 발생하는 링크 이동 등을 막아주기 위해
-    }
-}, false);
+document.addEventListener("DOMContentLoaded", function () {
+    document.addEventListener("click", function (event) {
+        if ((event.altKey && metaKey == "Alt")
+            || (event.ctrlKey && metaKey == "Ctrl")
+            || (event.shiftKey && metaKey == "Shift")) {
+            insertTranslateBox(event.target);
+            event.preventDefault();  //클릭 시 보통 발생하는 링크 이동 등을 막아주기 위해
+        }
+    }, false);
+});
 
 function insertTranslateBox(clickedElement) {
 
