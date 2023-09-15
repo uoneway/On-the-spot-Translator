@@ -1,92 +1,333 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <title>On the spot Translator</title>
     <meta charset="UTF-8">
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <script src="https://kit.fontawesome.com/e20984097a.js" crossorigin="anonymous"></script>
     <style>
-        div.title_div{
+        body {
+            font-family: Arial, sans-serif;
+        }
+
+        .title_div {
             padding: 7px;
             text-align: center;
-            border-bottom: 1px solid royalblue;
+            border-bottom: 2px solid #9a60bd;
         }
-        span.title{
-            color: royalblue;
+
+        .title {
+            color: #9a60bd;
             font-size: 27px;
-            font-style: italic;
+            font-style: normal;
+            font-family: ui-rounded;
+            font-weight: 600;
         }
-        label.input_label{
-            display: inline-block;
-            width: 130px;
-            line-height:50px;
+
+        .descript_div {
+            margin: 30px 0px;
+            padding: 0px 20px;
+            text-align: left;
+            border-top: 2px solid #9a60bd;
         }
-        .input_box{
-            width: 220px;
+
+
+        select,
+        input {
+            width: 100%;
+            padding: 8px 16px;
+            margin: 1px 0px;
+            box-sizing: border-box;
+            border: 1px solid #dde2e7;
+            border-radius: 4px;
+            text-align: left;
+            cursor: pointer;
         }
-        div.descript_div{
-            margin-top: 30px;
-            text-align: right;
+
+        .flex-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
-        span.descript{
+
+        .flex-container
+
+        /* key-box.box { */
+        /* display: flex; */
+        /* flex-direction: column; */
+        /* } */
+        .input_box {
+            flex: 2;
+            border-radius: 0px 5px 5px 0px;
+        }
+
+        .input_box.disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        label.input_label {
+            display: block;
+            flex: 1;
+            line-height: 19px;
+            text-align: center;
+            margin: 1px 0px;
+            padding: 6px 10px;
+            border: 1px solid #dde2e7;
+            border-radius: 5px 0px 0px 5px;
+            /* background: #f5e7e7; */
+        }
+
+
+        h3 {
+            color: #9a60bd;
+            /* border-bottom: 1px solid #9a60bd; */
+            margin-top: 1.5em;
+            margin-bottom: 0.2em;
+        }
+
+        h4 {
+            position: relative;
+            pointer-events: none;
+            line-height: 1.6em;
+            margin-top: 1.3em;
+            margin-bottom: 0.5em;
+        }
+
+        .descript {
             font-size: 15px;
-            text-align: right;
-            float: right;
+            display: block;
+            margin: 10px 0px 5px 0px;
+            ;
+        }
+
+        .active-tab {
+            background: #9a60bd !important;
+            /* 활성화 탭 색상 */
+        }
+
+        .inactive-tab {
+            background: #1f1c1c49 !important;
+            /* 비활성화 탭 색상 */
+        }
+
+        .api-info {
+            display: none;
+        }
+
+        .api-info.active {
+            display: block;
+        }
+
+        .switch {
+            position: absolute;
+            right: 0;
+            border: 0px;
+            /* 오른쪽 정렬을 위한 속성 */
+            /* hidden */
+            appearance: none;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+        }
+
+        .switch_label {
+            position: absolute;
+            right: 0;
+            cursor: pointer;
+            width: 40px;
+            height: 20px;
+            background: #fff;
+            border: 2px solid #daa;
+            border-radius: 20px;
+            transition: 0.2s;
+            z-index: 1;
+        }
+
+        .fa-regular {
+            padding: 0px 5px;
+        }
+
+        .switch_label,
+        .fa-circle-question {
+            pointer-events: auto;
+        }
+
+        .switch_label:hover {
+            background: #efefef;
+        }
+
+        .onf_btn {
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            border-radius: 16px;
+            background: #daa;
+            transition: 0.2s;
+        }
+
+        /* checking style */
+        .switch:checked+.switch_label {
+            background: #c44;
+            border: 2px solid #c44;
+        }
+
+        .switch:checked+.switch_label:hover {
+            background: #e55;
+        }
+
+        /* move */
+        .switch:checked+.switch_label .onf_btn {
+            left: 23px;
+            background: #fff;
+            box-shadow: 1px 2px 3px #00000020;
+        }
+
+        .tooltip {
+            position: relative;
+            display: inline-block;
+            cursor: pointer;
+        }
+
+        .tooltip .tooltiptext {
+            visibility: hidden;
+            position: absolute;
+            z-index: 2;
+            opacity: 0;
+            transition: opacity 0.3s;
+            width: 200px;
+            margin-left: 5px;
+            padding: 5px;
+            line-height: 1.3em;
+            font-family: sans-serif;
+            font-size: 13px;
+            text-align: center;
+            color: #fff;
+            background-color: #777070;
+            border-radius: 6px;
+        }
+
+        .tooltip:hover .tooltiptext {
+            visibility: visible;
+            opacity: 1;
         }
     </style>
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <script>
+        $(function () {
+            // 페이지 로드 시 모든 .activate-api 체크박스를 확인하고 관련 인풋 박스를 비활성화
+            $(".activate-api").each(function () {
+                var inputBox = $(this).closest('.api-info').find(".input_box");
+                inputBox.addClass("disabled").prop("disabled", true);
+            });
+
+            $(".activate-api").change(function () {
+                // 체크박스 변경 로직은 동일
+                var inputBox = $(this).closest('.api-info').find(".input_box");
+                if ($(this).prop("checked")) {
+                    inputBox.removeClass("disabled").prop("disabled", false);
+                } else {
+                    inputBox.addClass("disabled").prop("disabled", true);
+                }
+            });
+        });
+
+    </script>
 </head>
+
 <body>
-    <div style="font-size:large;width: 400px;">
+    <div style="width: 400px;">
         <div class="title_div">
+            <a href="https://chrome.google.com/webstore/detail/on-the-spot-translator/bgljcgcfhppljahbdkfgeldgfdjknpfa"
+                target="_blank">
+                <img src="images/icon.png" style="width: 45px;float: left;">
+            </a>
             <span class="title">On the spot Translator</span>
         </div>
-        <div style="padding: 0px 20px 20px 20px;">                             
-            <div style="font-size:large;">
-                <h3 id="hot_key_title">Hot keys</h3>
-                <label for="meta_key_label" class="input_label">To translate:</label>
-                <select class="input_box" id="meta_key">
-                   <option value="Alt">Alt + Click</option>
-                   <option value="Ctrl">Ctrl + Click</option>
-                   <option value="Shift">Shift + Click</option>
-                </select>
-            </div>
-            <div style="font-size:large; margin-top: 30px;">
-                <h3 id="papago_api_info_title">Naver API Application Information </h3>
-                <form id="papago_api_info_form">
-                        <label for="naver_api_client_id" class="input_label">Client ID:</label>
-                        <input class="input_box" type="text" id="naver_api_client_id" name="naver_api_client_id">
-    
-                        <label for="naver_api_client_secret" class="input_label">Client Secret:</label>
-                        <input class="input_box" type="password" id="naver_api_client_secret" name="naver_api_client_secret">
-                </form>
-                <span class="descript">
-                    🔎 <a href="https://www.notion.so/uoneway/On-the-spot-Translator-1826d87aa2d845d093793cee0ca11b29" target="_blank">
-                        How to get Naver Papago API keys
-                    </a>
-                </span>
-            </div>
-       </div>
+        <div style="padding: 0px 20px;">
+            <form id="optionsForm">
+                <div>
+                    <h3>Shortcut</h3>
+                    <select id="meta_key" name="meta_key" class="box">
+                        <option value="Alt">Alt + Click</option>
+                        <option value="Ctrl">Ctrl + Click</option>
+                        <option value="Shift">Shift + Click</option>
+                    </select>
+                </div>
+                <div>
+                    <h3>Translate selected text to</h3>
+                    <select id="main_lang" name="main_lang" class="box">
+                        <option value="ko">Korean</option>
+                        <option value="en">English</option>
+                    </select>
 
-       <div class="descript_div">
-        <a href="https://chrome.google.com/webstore/detail/on-the-spot-Translator/bgljcgcfhppljahbdkfgeldgfdjknpfa" target="_blank">
-            <img src="images/icon.png" 
-            style="width: 65px;float: left;">
-        </a>
-        <div style="padding-top: 10px;">
+                    <label class="descript" for="sub_lang">If the above language is detected, translate it to:</label>
+                    <select id="sub_lang" name="sub_lang" class="box">
+                        <option value="ko">Korean</option>
+                        <option value="en">English</option>
+                    </select>
+                </div>
+                <div>
+                    <h3>Translator API Authentication Info</h3>
+                    <div class="api-info active">
+                        <h4>DeepL
+                            <i class="fa-regular fa-circle-question tooltip">
+                                <span class="tooltiptext">Click <a
+                                        href="https://www.notion.so/uoneway/On-the-spot-Translator-1826d87aa2d845d093793cee0ca11b29"
+                                        target="_blank">THIS</a> to get DeepL API key</span>
+                            </i>
+                            <input type="checkbox" id="switch2" class="activate-api switch">
+                            <label for="switch2" class="switch_label">
+                                <span class="onf_btn"></span>
+                            </label>
+                        </h4>
+                        <div class="flex-container">
+                            <label for="deepl_api_key" class="input_label">API Key</label>
+                            <input class="input_box box" type="text" id="deepl_api_key" name="deepl_api_key">
+                        </div>
+                    </div>
+                    <div class="api-info active">
+                        <h4>NAVER Papago
+                            <i class="fa-regular fa-circle-question tooltip">
+                                <span class="tooltiptext">Click <a
+                                        href="https://www.notion.so/uoneway/On-the-spot-Translator-1826d87aa2d845d093793cee0ca11b29"
+                                        target="_blank">THIS</a> to get NAVER Papago API key</span>
+                            </i>
+                            <input type="checkbox" id="switch1" class="activate-api switch">
+                            <label for="switch1" class="switch_label">
+                                <span class="onf_btn"></span>
+                            </label>
+                        </h4>
+                        <div class="flex-container">
+                            <label for="naver_api_client_id" class="input_label">Client ID</label>
+                            <input class="input_box box" type="text" id="naver_api_client_id"
+                                name="naver_api_client_id">
+                        </div>
+                        <div class="flex-container">
+                            <label for="naver_api_client_secret" class="input_label">Client Secret</label>
+                            <input class="input_box box" type="password" id="naver_api_client_secret"
+                                name="naver_api_client_secret">
+                        </div>
+                    </div>
+                </div>
+
+            </form>
+        </div>
+        <div class="descript_div">
             <span class="descript">
-                ♥ <a href="https://chrome.google.com/webstore/detail/on-the-spot-Translator/bgljcgcfhppljahbdkfgeldgfdjknpfa" target="_blank">
-                    Leave feedback
+                ♥ <a href="https://chrome.google.com/webstore/detail/on-the-spot-translator/bgljcgcfhppljahbdkfgeldgfdjknpfa"
+                    target="_blank">
+                    Give me your feedback!
                 </a>
+                <span class="descript">✔ Your changes will be saved automatically.</span>
             </span>
-            <!-- NOTE: populate with your own Client id/secret from https://developers.naver.com/apps-->
-            </br>
-            <span class="descript">✔ Your changes will be saved automatically.</span>
         </div>
     </div>
-        
-    </div>
-
-<script src="options.js"></script>
+    <script src="options.js"></script>
 </body>
+
 </html>
-
-
-
