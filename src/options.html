@@ -5,13 +5,8 @@
     <meta charset="UTF-8">
     <title>On the spot Translator</title>
     <!-- <meta name="description" content="Description of the page"> -->
-
-    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
     <link rel="stylesheet" href="css/options_styles.css">
-
-    <script src="https://kit.fontawesome.com/e20984097a.js" crossorigin="anonymous" defer></script>
-    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
-    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js" defer></script>
+    <script src="content-script/external/jquery-3.7.1.min.js"></script>
 </head>
 
 <body>
@@ -50,11 +45,12 @@
                     <h3>Translator API Authentication Info</h3>
                     <div class="api-info active">
                         <h4>DeepL
-                            <i class="fa-regular fa-circle-question tooltip">
+                            <div class="tooltip">
+                                <img src="images/circle-question-regular.svg" alt="Question Icon" class="tooltip-icon">
                                 <span class="tooltiptext">Click <a
                                         href="https://www.notion.so/uoneway/On-the-spot-Translator-1826d87aa2d845d093793cee0ca11b29"
                                         target="_blank">THIS</a> to get DeepL API key</span>
-                            </i>
+                            </div>
                             <input type="checkbox" id="switch1" class="activate-api switch">
                             <label for="switch1" class="switch_label">
                                 <span class="onf_btn"></span>
@@ -67,11 +63,12 @@
                     </div>
                     <div class="api-info active">
                         <h4>NAVER Papago
-                            <i class="fa-regular fa-circle-question tooltip">
+                            <div class="tooltip">
+                                <img src="images/circle-question-regular.svg" alt="Question Icon" class="tooltip-icon">
                                 <span class="tooltiptext">Click <a
                                         href="https://www.notion.so/uoneway/On-the-spot-Translator-1826d87aa2d845d093793cee0ca11b29"
                                         target="_blank">THIS</a> to get NAVER Papago API key</span>
-                            </i>
+                            </div>
                             <input type="checkbox" id="switch2" class="activate-api switch">
                             <label for="switch2" class="switch_label">
                                 <span class="onf_btn"></span>
@@ -102,27 +99,7 @@
             </span>
         </div>
     </div>
-
     <script src="options.js"></script>
-    <script>
-        $(function () {
-            // 페이지 로드 시 모든 .activate-api 체크박스를 확인하고 관련 인풋 박스를 비활성화
-            $(".activate-api").each(function () {
-                var inputBox = $(this).closest('.api-info').find(".input_box");
-                inputBox.addClass("disabled").prop("disabled", true);
-            });
-
-            $(".activate-api").change(function () {
-                // 체크박스 변경 로직은 동일
-                var inputBox = $(this).closest('.api-info').find(".input_box");
-                if ($(this).prop("checked")) {
-                    inputBox.removeClass("disabled").prop("disabled", false);
-                } else {
-                    inputBox.addClass("disabled").prop("disabled", true);
-                }
-            });
-        });
-    </script>
 </body>
 
 </html>

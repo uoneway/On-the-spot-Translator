@@ -26,8 +26,7 @@ h3 {
 h4 {
     position: relative;
     pointer-events: none;
-    line-height: 1.6em;
-    margin-top: 1.3em;
+    margin-top: 1.5em;
     margin-bottom: 0.5em;
 }
 
@@ -95,6 +94,11 @@ label.input_label {
     display: block;
 }
 
+.api-info h4{
+    display: flex;
+    align-items: center; /* 세로 중앙 정렬 */
+}
+
 .active-tab {
     background: #9a60bd !important;
     /* 활성화 탭 색상 */
@@ -141,10 +145,6 @@ label.input_label {
     transition: 0.2s;
 }
 
-.fa-regular {
-    padding: 0px 5px;
-}
-
 .switch_label,
 .fa-circle-question {
     pointer-events: auto;
@@ -173,6 +173,10 @@ label.input_label {
     position: relative;
     display: inline-block;
     cursor: pointer;
+    width: 15px;
+    height: 15px;
+    padding: 0px 10px;
+    pointer-events: auto;  
 }
 
 .tooltip .tooltiptext {
