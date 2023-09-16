@@ -1,0 +1,199 @@
+body {
+    font-family: Arial, sans-serif;
+}
+
+.title_div {
+    padding: 7px;
+    text-align: center;
+    border-bottom: 2px solid #9a60bd;
+}
+
+.title {
+    color: #9a60bd;
+    font-size: 27px;
+    font-style: normal;
+    font-family: ui-rounded;
+    font-weight: 600;
+}
+
+h3 {
+    color: #9a60bd;
+    /* border-bottom: 1px solid #9a60bd; */
+    margin-top: 1.5em;
+    margin-bottom: 0.2em;
+}
+
+h4 {
+    position: relative;
+    pointer-events: none;
+    line-height: 1.6em;
+    margin-top: 1.3em;
+    margin-bottom: 0.5em;
+}
+
+.descript_div {
+    margin: 30px 0px;
+    padding: 0px 20px;
+    text-align: left;
+    border-top: 2px solid #9a60bd;
+}
+.descript {
+    font-size: 15px;
+    display: block;
+    margin: 10px 0px 5px 0px;
+    ;
+}
+
+
+select,
+input {
+    width: 100%;
+    padding: 8px 16px;
+    margin: 1px 0px;
+    box-sizing: border-box;
+    border: 1px solid #dde2e7;
+    border-radius: 4px;
+    text-align: left;
+    cursor: pointer;
+}
+
+.flex-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+
+.input_box {
+    flex: 2;
+    border-radius: 0px 5px 5px 0px;
+}
+
+.input_box.disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+label.input_label {
+    display: block;
+    flex: 1;
+    line-height: 19px;
+    text-align: center;
+    margin: 1px 0px;
+    padding: 6px 10px;
+    border: 1px solid #dde2e7;
+    border-radius: 5px 0px 0px 5px;
+    /* background: #f5e7e7; */
+}
+
+
+.api-info {
+    display: none;
+}
+
+.api-info.active {
+    display: block;
+}
+
+.active-tab {
+    background: #9a60bd !important;
+    /* 활성화 탭 색상 */
+}
+
+.inactive-tab {
+    background: #1f1c1c49 !important;
+    /* 비활성화 탭 색상 */
+}
+
+.switch {
+    position: absolute;
+    right: 0;
+    border: 0px;
+    /* 오른쪽 정렬을 위한 속성 */
+    /* hidden */
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+}
+
+.switch_label {
+    position: absolute;
+    right: 0;
+    cursor: pointer;
+    width: 40px;
+    height: 20px;
+    background: #fff;
+    border: 2px solid #daa;
+    border-radius: 20px;
+    transition: 0.2s;
+    z-index: 1;
+}
+
+.onf_btn {
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    border-radius: 16px;
+    background: #daa;
+    transition: 0.2s;
+}
+
+.fa-regular {
+    padding: 0px 5px;
+}
+
+.switch_label,
+.fa-circle-question {
+    pointer-events: auto;
+}
+
+.switch_label:hover {
+    background: #efefef;
+}
+
+.switch:checked+.switch_label {
+    background: #c44;
+    border: 2px solid #c44;
+}
+
+.switch:checked+.switch_label:hover {
+    background: #e55;
+}
+
+.switch:checked+.switch_label .onf_btn {
+    left: 23px;
+    background: #fff;
+    box-shadow: 1px 2px 3px #00000020;
+}
+
+.tooltip {
+    position: relative;
+    display: inline-block;
+    cursor: pointer;
+}
+
+.tooltip .tooltiptext {
+    visibility: hidden;
+    position: absolute;
+    z-index: 2;
+    opacity: 0;
+    transition: opacity 0.3s;
+    width: 200px;
+    margin-left: 5px;
+    padding: 5px;
+    line-height: 1.3em;
+    font-family: sans-serif;
+    font-size: 13px;
+    text-align: center;
+    color: #fff;
+    background-color: #777070;
+    border-radius: 6px;
+}
+
+.tooltip:hover .tooltiptext {
+    visibility: visible;
+    opacity: 1;
+}
