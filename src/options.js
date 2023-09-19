@@ -1,12 +1,9 @@
-// In-page cache of the user's options
-const options = {};
 const optionsForm = document.getElementById("optionsForm");
 
 // Immediately persist options changes
 function addChangeListener(element, optionKey) {
   element.addEventListener("change", (event) => {
-      options[optionKey] = event.target.value;
-      chrome.storage.sync.set({ options });
+    chrome.storage.sync.set({ [optionKey]: event.target.value });
   });
 }
 
@@ -17,37 +14,35 @@ addChangeListener(optionsForm.deepl_api_key, 'deepl_api_key');
 addChangeListener(optionsForm.naver_api_client_id, 'naver_api_client_id');
 addChangeListener(optionsForm.naver_api_client_secret, 'naver_api_client_secret');
 
+// Default values for each key
+const defaultOptionValues = {
+  meta_key: 'Alt',
+  main_lang: 'ko',
+  sub_lang: 'en',
+  deepl_api_key: '',
+  naver_api_client_id: '',
+  naver_api_client_secret: ''
+};
+
 // Initialize the form with the user's option settings
 async function restoreOptions() {
-  const data = await chrome.storage.sync.get("options");
-  Object.assign(options, data.options);
-  optionsForm.meta_key.value = options.meta_key || 'Alt';
-  optionsForm.main_lang.value = options.main_lang || 'ko';
-  optionsForm.sub_lang.value = options.sub_lang || 'en';
-  optionsForm.deepl_api_key.value = options.deepl_api_key || '';
-  optionsForm.naver_api_client_id.value = options.naver_api_client_id || '';
-  optionsForm.naver_api_client_secret.value = options.naver_api_client_secret || '';
+  for (const [key, defaultValue] of Object.entries(defaultOptionValues)) {
+    const value = await new Promise(resolve => {
+      chrome.storage.sync.get([key], result => {
+        if (result[key] === undefined) {
+          chrome.storage.sync.set({ [key]: defaultValue });
+          resolve(defaultValue);
+        } else {
+          resolve(result[key]);
+        }
+      });
+    });
+    // options[key] = value;
+    optionsForm[key].value = value;
+  }
 }
 
 document.addEventListener('DOMContentLoaded', restoreOptions);
-
-
-// function saveOptions() {
-//   chrome.storage.sync.set({
-//     metaKey: document.getElementById("meta_key").value,
-//     naver_api_client_id: document.getElementById("naver_api_client_id").value,
-//     naver_api_client_secret: document.getElementById("naver_api_client_secret").value,
-//   });
-// }
-// document.getElementById("meta_key").addEventListener("change", saveOptions);
-// document.getElementById("naver_api_client_id").addEventListener("change", saveOptions);
-// document.getElementById("naver_api_client_secret").addEventListener("change", saveOptions);
-// // document.getElementById("meta_key_label").textContent = chrome.i18n.getMessage("meta_key");
-
-// function updateOption(event) {
-//   options[event.target.name] = event.target.checked || event.target.value;
-//   chrome.storage.sync.set({ options });
-// }
 
 
 $(function () {
