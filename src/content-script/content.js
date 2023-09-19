@@ -70,16 +70,10 @@ function drawSourceBox(overedElement) {
     let rect = overedElement.getBoundingClientRect();
     let sourceBox = document.createElement("div");
     sourceBox.className = "sourceBox";
-    sourceBox.style.position = "absolute";
     sourceBox.style.top = (rect.top + window.scrollY) + "px";
     sourceBox.style.left = (rect.left + window.scrollX) + "px";
     sourceBox.style.width = (rect.width - 4) + "px";
     sourceBox.style.height = (rect.height - 4) + "px";
-    sourceBox.style.border = "solid 2px royalblue";
-    sourceBox.style.borderRadius = "5px";
-    // sourceBox.style.fontSize = "smaller";
-    sourceBox.style.zIndex = "99999";
-    sourceBox.style.pointerEvents = "none";
     document.body.appendChild(sourceBox);
 
     // $(sourceBox).fadeIn(300, "swing").delay(600).fadeOut(500, "swing");
@@ -114,13 +108,6 @@ async function insertSpotBox(clickedElement) {
     let text = getText(clickedElement.firstChild, "\n").trim();  // "\r\n"
     // console.log("text1", text)
 
-    spotBox.style.border = "solid 2px white";
-    spotBox.style.borderRadius = "5px";
-    spotBox.style.padding = "5px";
-    spotBox.style.zIndex = "99999";
-    spotBox.style.pointerEvents = "none";
-    spotBox.style.backgroundColor = "#252424";
-    spotBox.style.color = "white";
 
     try {
         clickedElement.appendChild(spotBox);
