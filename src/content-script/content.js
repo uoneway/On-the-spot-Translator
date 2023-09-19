@@ -1,9 +1,6 @@
 let MAX_REQ_LEN = 3000
-let TGT_LANG = "ko"
+// let spotWorks;
 
-
-// Set a meta key from icon popup
-let spotWorks;
 let metaKey;
 updateMetaKey();
 
@@ -16,12 +13,8 @@ chrome.storage.onChanged.addListener(function (changes, areaName) {
 function updateMetaKey() {
     chrome.storage.sync.get({
         metaKey: 'Alt',
-        // naver_api_client_id: '',
-        // naver_api_client_secret: '',
     }, function (items) {
         metaKey = items.metaKey;
-        // naver_api_client_id = items.naver_api_client_id;
-        // naver_api_client_secret = items.naver_api_client_secret;
     });
 };
 
@@ -86,8 +79,8 @@ document.addEventListener("DOMContentLoaded", function () {
     //     if (((event.altKey && metaKey == "Alt")
     //         || (event.ctrlKey && metaKey == "Ctrl")
     //         || (event.shiftKey && metaKey == "Shift")) && event.key == "1") {
-    //         insertSpotBox(event.target);
-    //         event.preventDefault();  //클릭 시 보통 발생하는 링크 이동 등을 막아주기 위해
+    //         insertWholeBox(event.target);
+    //         event.preventDefault();
     //     }
     // }, false);
     document.addEventListener("click", function (event) {
@@ -102,24 +95,26 @@ document.addEventListener("DOMContentLoaded", function () {
 
 async function insertSpotBox(clickedElement) {
 
-    let spotBox = document.createElement("div");
-    spotBox.className = "spotBox";
+    let spot_box = document.createElement("div");
+    spot_box.className = "spotBox";
 
-    let text = getText(clickedElement.firstChild, "\n").trim();  // "\r\n"
-    // console.log("text1", text)
+    let text = getText(clickedElement.firstChild, "\n")
+    if (text.length == 0) {
+        return false
+    }
 
 
     try {
-        clickedElement.appendChild(spotBox);
+        clickedElement.appendChild(spot_box);
 
         if (text.length > MAX_REQ_LEN) {
             let error_text = "Only can translate up to " + MAX_REQ_LEN + " characters at once."
             // console.error(error_text)
-            $(spotBox).text(error_text);
+            $(spot_box).text(error_text);
             return false
         }
-
-        req_server("spot", text, TGT_LANG, spotBox)
+        
+        req_server("spot", text, spot_box)
 
     } finally {
         $(".borderBox").remove();
@@ -128,12 +123,10 @@ async function insertSpotBox(clickedElement) {
 }
 
 //goes to bg_page.js. 크롬 익스텐션에서는 그냥 sendMessage 보내면 backgroud.js로 보내는걸로 정해져 있는듯함
-async function req_server(reqType, srcText, tgtLang, tgtBoxCls) {
+async function req_server(reqType, srcText, tgtBoxCls) {
     await chrome.runtime.sendMessage({
         reqType: reqType,
-        srcText: srcText,  // data로 묶기
-        tgtLang: tgtLang,
-        tgtBoxCls: tgtBoxCls
+        srcText: srcText, 
     },
         function (response) {
             // papago에 바로 요청할 때
@@ -149,10 +142,8 @@ async function req_server(reqType, srcText, tgtLang, tgtBoxCls) {
                 $(tgtBoxCls).text("✔ " + response.text);
 
             } else {
-                if (response.ext_api_code != undefined) {  // heroku는 괜찮은데 papago 문제일 때
-                    console.log(response.ext_api_code);
-                    error_msg = convert_papago_error_to_msg(response.ext_api_code); //, "❗ ")
-                    $(tgtBoxCls).html(error_msg);
+                if (response.status_msg != undefined) {  // heroku는 괜찮은데 papago 문제일 때
+                    $(tgtBoxCls).html(response.status_msg);
                 } else {
                     console.log(response.error);
                     $(tgtBoxCls).text(response.error);

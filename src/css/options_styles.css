@@ -99,16 +99,6 @@ label.input_label {
     align-items: center; /* 세로 중앙 정렬 */
 }
 
-.active-tab {
-    background: #9a60bd !important;
-    /* 활성화 탭 색상 */
-}
-
-.inactive-tab {
-    background: #1f1c1c49 !important;
-    /* 비활성화 탭 색상 */
-}
-
 .switch {
     position: absolute;
     right: 0;
