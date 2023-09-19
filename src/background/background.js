@@ -15,13 +15,13 @@ class Translator {
         if (options.deepl_api_key) {
             translator_client_info = {
                 "translator_type": "deepl",
-                "secret_key": options.deepl_api_key,
+                "api_key": options.deepl_api_key,
             };
-        } else if (options.naver_api_client_secret && options.naver_api_client_id) {
+        } else if (options.papago_secret_key && options.papago_api_key) {
             translator_client_info = {
                 "translator_type": "papago",
-                "secret_key": options.naver_api_client_secret,
-                "api_key": options.naver_api_client_id
+                "api_key": options.papago_api_key,
+                "secret_key": options.papago_secret_key
             };
         } else {
             translator_client_info = {

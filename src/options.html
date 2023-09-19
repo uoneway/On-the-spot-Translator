@@ -35,7 +35,7 @@
                         <option value="en">English</option>
                     </select>
 
-                    <label class="descript" for="sub_lang">If the above language is detected, translate it to:</label>
+                    <label class="descript" for="sub_lang">If the above language is selected, translate it to:</label>
                     <select id="sub_lang" name="sub_lang" class="box">
                         <option value="ko">Korean</option>
                         <option value="en">English</option>
@@ -51,8 +51,8 @@
                                         href="https://www.notion.so/uoneway/On-the-spot-Translator-1826d87aa2d845d093793cee0ca11b29"
                                         target="_blank">THIS</a> to get DeepL API key</span>
                             </div>
-                            <input type="checkbox" id="switch1" class="activate-api switch">
-                            <label for="switch1" class="switch_label">
+                            <input type="checkbox" id="switch_deepl" class="activate-api switch">
+                            <label for="switch_deepl" class="switch_label">
                                 <span class="onf_btn"></span>
                             </label>
                         </h4>
@@ -69,20 +69,19 @@
                                         href="https://www.notion.so/uoneway/On-the-spot-Translator-1826d87aa2d845d093793cee0ca11b29"
                                         target="_blank">THIS</a> to get NAVER Papago API key</span>
                             </div>
-                            <input type="checkbox" id="switch2" class="activate-api switch">
-                            <label for="switch2" class="switch_label">
+                            <input type="checkbox" id="switch_papago" class="activate-api switch">
+                            <label for="switch_papago" class="switch_label">
                                 <span class="onf_btn"></span>
                             </label>
                         </h4>
                         <div class="flex-container">
-                            <label for="naver_api_client_id" class="input_label">Client ID</label>
-                            <input class="input_box box" type="text" id="naver_api_client_id"
-                                name="naver_api_client_id">
+                            <label for="papago_api_key" class="input_label">Client ID</label>
+                            <input class="input_box box" type="text" id="papago_api_key" name="papago_api_key">
                         </div>
                         <div class="flex-container">
-                            <label for="naver_api_client_secret" class="input_label">Client Secret</label>
-                            <input class="input_box box" type="password" id="naver_api_client_secret"
-                                name="naver_api_client_secret">
+                            <label for="papago_secret_key" class="input_label">Client Secret</label>
+                            <input class="input_box box" type="password" id="papago_secret_key"
+                                name="papago_secret_key">
                         </div>
                     </div>
                 </div>

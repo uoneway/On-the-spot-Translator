@@ -1,18 +1,33 @@
 const optionsForm = document.getElementById("optionsForm");
 
-// Immediately persist options changes
 function addChangeListener(element, optionKey) {
   element.addEventListener("change", (event) => {
     chrome.storage.sync.set({ [optionKey]: event.target.value });
   });
 }
 
+const switchKeys = ['switch_deepl', 'switch_papago'];
+const switchToInputsMapping = {
+  'switch_deepl': ['deepl_api_key'],
+  'switch_papago': ['papago_api_key', 'papago_secret_key']
+};
+function addSwitchChangeListener(element, optionKey) {
+  element.addEventListener("change", (event) => {
+    chrome.storage.sync.set({ [optionKey]: event.target.checked });
+  });
+}
+
+
 addChangeListener(optionsForm.meta_key, 'meta_key');
 addChangeListener(optionsForm.main_lang, 'main_lang');
 addChangeListener(optionsForm.sub_lang, 'sub_lang');
+
+addSwitchChangeListener(optionsForm.switch_deepl, 'switch_deepl');
 addChangeListener(optionsForm.deepl_api_key, 'deepl_api_key');
-addChangeListener(optionsForm.naver_api_client_id, 'naver_api_client_id');
-addChangeListener(optionsForm.naver_api_client_secret, 'naver_api_client_secret');
+
+addSwitchChangeListener(optionsForm.switch_papago, 'switch_papago');
+addChangeListener(optionsForm.papago_api_key, 'papago_api_key');
+addChangeListener(optionsForm.papago_secret_key, 'papago_secret_key');
 
 // Default values for each key
 const defaultOptionValues = {
@@ -20,8 +35,10 @@ const defaultOptionValues = {
   main_lang: 'ko',
   sub_lang: 'en',
   deepl_api_key: '',
-  naver_api_client_id: '',
-  naver_api_client_secret: ''
+  switch_deepl: false,
+  papago_api_key: '',
+  papago_secret_key: '',
+  switch_papago: false,
 };
 
 // Initialize the form with the user's option settings
@@ -37,8 +54,25 @@ async function restoreOptions() {
         }
       });
     });
-    // options[key] = value;
-    optionsForm[key].value = value;
+    
+    if (switchKeys.includes(key)) {
+      optionsForm[key].checked = value;
+
+      // 스위치의 체크 상태에 따라 관련된 입력 필드의 class에 disabled 추가/제거
+      if (switchToInputsMapping[key]) {
+        switchToInputsMapping[key].forEach(inputId => {
+          const inputElement = document.getElementById(inputId);
+          if (value) {
+            inputElement.classList.remove('disabled');
+          } else {
+            inputElement.classList.add('disabled');
+          }
+        });
+      }
+
+    } else {
+      optionsForm[key].value = value;
+    }
   }
 }
 
