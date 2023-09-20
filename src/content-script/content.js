@@ -1,6 +1,11 @@
-let MAX_REQ_LEN = 3000
-// let spotWorks;
+const MAX_REQ_LEN = 3000
+const translatorIcon = {
+    'deepl': '../images/translator_icons/deepl_icon.png',
+    'papago':'../images/translator_icons/papago_icon.png',
+    'google':'../images/translator_icons/google_icon.png'
+  };
 
+// let spotWorks;
 let metaKey;
 updateMetaKey();
 
@@ -103,7 +108,6 @@ async function insertSpotBox(clickedElement) {
         return false
     }
 
-
     try {
         clickedElement.appendChild(spot_box);
 
@@ -129,44 +133,31 @@ async function req_server(reqType, srcText, tgtBoxCls) {
         srcText: srcText, 
     },
         function (response) {
-            // papago에 바로 요청할 때
-            // if (response.text != undefined){
-            //     console.log(response.ext_api_code)
-            //     $(tgtBoxCls).text("✔ " + response.text);
-            // }else{
-            //     console.log(response.error);
-            //     $(tgtBoxCls).text(response.error);
-            // }
+            let iconPath;
+            if (translatorIcon[response.translator_type]) {
+                iconPath = translatorIcon[response.translator_type];
+            } else {
+                iconPath = '../images/icon.png';
+            }
+            
+            const iconHtml = `<span><img src="${chrome.runtime.getURL(iconPath)}" alt="Icon"></span>`;
+            let textHtml;
 
             if (response.text != undefined) {  // ok
-                $(tgtBoxCls).text("✔ " + response.text);
-
+                textHtml = `<span>${response.text}</span>`;
+                $(tgtBoxCls).html(iconHtml + textHtml);
             } else {
                 if (response.status_msg != undefined) {  // heroku는 괜찮은데 papago 문제일 때
-                    $(tgtBoxCls).html(response.status_msg);
+                    textHtml = `<span>${response.status_msg}</span>`;
+                    $(tgtBoxCls).html(iconHtml + textHtml);
                 } else {
                     console.log(response.error);
                     $(tgtBoxCls).text(response.error);
                 }
             }
-            // console.log(response);  
         });
 }
 
-// https://developers.naver.com/docs/common/openapiguide/errorcode.md#%EC%98%A4%EB%A5%98-%EB%A9%94%EC%8B%9C%EC%A7%80-%ED%98%95%EC%8B%9D
-function convert_papago_error_to_msg(error_code, prefix = '') {
-    let forForDetail = "</br>For more details, click <a target='_blank' href='https://www.notion.so/uoneway/On-the-spot-Translator-1826d87aa2d845d093793cee0ca11b29' style='color: #008eff; pointer-events: all;'><u>here</u></a>"
-    if (error_code == '401') {
-        error_msg = "🔧 Authentication failed: </br>Please make sure you enter correct 'Naver API application info(Client ID and Client Secret)' in the option popup." + forForDetail;
-    } else if (error_code == '403') {
-        error_msg = "🔧 You don't have the 'Papago Translation API' permission: </br>Please add 'Papago Translation' on 'API setting' tab in the Naver Developer Center website." + forForDetail;
-    } else if (error_code == '429') {
-        error_msg = "⏳ Used up all your daily usage: </br>This translator use Naver Papago API which provide only 10,000 characters translation per a day.";
-    } else {
-        error_msg = "❗ Error: </br>Some problem occured at Naver Papago API application. Please try again in a few minutes";
-    };
-    return prefix + error_msg
-}
 
 function getText(node, lineSeparator) {
     let text = "";

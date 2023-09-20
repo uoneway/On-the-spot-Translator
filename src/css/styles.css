@@ -1,18 +1,29 @@
 .sourceBox {
     position: absolute;
-    border: solid 2px royalblue;
+    border: dashed 2px #9a60bd;
     border-radius: 5px;
+    padding: 15px;
     z-index: 99999;
     pointer-events: none;
 }
 
 .spotBox {
-    border: solid 2px white;
+    border: solid 2px #9a60bd;
+    background-color: white;
+    color: black;
     border-radius: 5px;
     padding: 5px;
     z-index: 99999;
     pointer-events: none;
-    background-color: #252424;
-    color: white;
     font-size: 90%;
+    line-height: 1.7em;
+}
+
+.spotBox img{
+    background-color: transparent;
+    border: none;
+    padding: 0;
+    vertical-align: middle;
+    height: 1.6em;
+    float: left;
 }

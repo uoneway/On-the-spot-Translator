@@ -49,11 +49,7 @@ class Translator {
 
         const data = await response.json();
         console.log("Translation response:", data);
-        return {
-            'text': data.text,
-            'status_msg': data.status_msg,
-            'translator_type': data.translator_type
-        };
+        return data;
     }
 }
 
