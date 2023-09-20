@@ -17,9 +17,9 @@ chrome.storage.onChanged.addListener(function (changes, areaName) {
 
 function updateMetaKey() {
     chrome.storage.sync.get({
-        metaKey: 'Alt',
+        meta_key: 'Alt',
     }, function (items) {
-        metaKey = items.metaKey;
+        metaKey = items.meta_key;
     });
 };
 
