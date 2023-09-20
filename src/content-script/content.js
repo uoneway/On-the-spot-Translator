@@ -26,21 +26,39 @@ function updateMetaKey() {
 
 // SourceBox
 let sourceBoxActivated = false;
+let metaKeyPressed = false; // Move this to the global scope
 
 document.addEventListener("DOMContentLoaded", function () {
+
     document.addEventListener("mouseover", function (event) {
-        // console.log("mouseover")
         if (sourceBoxActivated) {
             drawSourceBox(event.target);
             event.preventDefault();
         }
     }, false);
 
-    document.addEventListener("keydown", function (event) {
-        // console.log("keydown")
+    // Bind the keydown event to the window instead of document
+    window.addEventListener("keydown", function (event) {
         if ((event.altKey && metaKey == "Alt")
             || (event.ctrlKey && metaKey == "Ctrl")
             || (event.shiftKey && metaKey == "Shift")) {
+            metaKeyPressed = true; // Set the flag to true when meta key is pressed
+        }
+    }, true);
+
+    window.addEventListener("keyup", function (event) {
+        if ((!event.altKey && metaKey == "Alt")
+            || (!event.ctrlKey && metaKey == "Ctrl")
+            || (!event.shiftKey && metaKey == "Shift")) {
+            metaKeyPressed = false; // Set the flag to false when meta key is released
+            sourceBoxActivated = false;
+            $(".sourceBox").remove();
+            event.preventDefault();
+        }
+    }, true);
+
+    document.addEventListener("mousemove", function (event) {
+        if (metaKeyPressed) { // Check if meta key is pressed
             let elements = document.querySelectorAll(":hover");
             if (elements.length > 0) {
                 drawSourceBox(elements[elements.length - 1]);
@@ -48,18 +66,9 @@ document.addEventListener("DOMContentLoaded", function () {
             }
         }
     }, true);
-
-    document.addEventListener("keyup", function (event) {
-        // console.log("keyup")
-        if ((!event.altKey && metaKey == "Alt")
-            || (!event.ctrlKey && metaKey == "Ctrl")
-            || (!event.shiftKey && metaKey == "Shift")) {
-            sourceBoxActivated = false;
-            $(".sourceBox").remove();
-            event.preventDefault();
-        }
-    }, true);
 });
+
+
 
 function drawSourceBox(overedElement) {
     // Remove before sourceBox
@@ -92,6 +101,7 @@ document.addEventListener("DOMContentLoaded", function () {
         if ((event.altKey && metaKey == "Alt")
             || (event.ctrlKey && metaKey == "Ctrl")
             || (event.shiftKey && metaKey == "Shift")) {
+                $(".sourceBox").remove();
             insertSpotBox(event.target);
             event.preventDefault();  //클릭 시 보통 발생하는 링크 이동 등을 막아주기 위해
         }
