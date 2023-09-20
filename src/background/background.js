@@ -1,5 +1,17 @@
 let options;
+updateOptions();
 
+function updateOptions() {
+    chrome.storage.sync.get(null, function (_options) {
+        options = _options;
+    });
+}
+
+chrome.storage.onChanged.addListener(function (changes, areaName) {
+    if (areaName == "sync") {
+        updateOptions();
+    }
+});
 class Translator {
     static url = "http://127.0.0.1:8000/translate";
     static headers = {
@@ -12,12 +24,12 @@ class Translator {
         }
         console.log("options:", options);
         let translator_client_info;
-        if (options.deepl_api_key) {
+        if (options.switch_deepl && options.deepl_api_key) {
             translator_client_info = {
                 "translator_type": "deepl",
                 "api_key": options.deepl_api_key,
             };
-        } else if (options.papago_secret_key && options.papago_api_key) {
+        } else if (options.switch_papago && options.papago_secret_key && options.papago_api_key) {
             translator_client_info = {
                 "translator_type": "papago",
                 "api_key": options.papago_api_key,
@@ -54,19 +66,7 @@ class Translator {
 }
 
 let translator = new Translator();
-updateOptions();
 
-chrome.storage.onChanged.addListener(function (changes, areaName) {
-    if (areaName == "sync") {
-        updateOptions();
-    }
-});
-
-function updateOptions() {
-    chrome.storage.sync.get(null, function (_options) {
-        options = _options;
-    });
-}
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     if (request.reqType == "spot") {
         translator.translate(request.srcText)
