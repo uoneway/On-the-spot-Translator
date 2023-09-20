@@ -10,7 +10,7 @@ class Translator {
         if (!src_text) {
             throw new Error('Search src_text should be provided as lookup arguments');
         }
-
+        console.log("options:", options);
         let translator_client_info;
         if (options.deepl_api_key) {
             translator_client_info = {
@@ -84,5 +84,41 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
         return true;  // Indicates that the response is sent asynchronously
     } else if (request.reqType == "whole") {
         // TO-DO
+    }
+});
+
+
+chrome.runtime.onInstalled.addListener(function(details) {
+    // Default values for each key
+    const defaultOptionValues = {
+        meta_key: 'Alt',
+        main_lang: 'ko',
+        sub_lang: 'en',
+        deepl_api_key: '',
+        switch_deepl: false,
+        papago_api_key: '',
+        papago_secret_key: '',
+        switch_papago: false,
+      };
+
+    if (details.reason == "install") {
+        // 이 확장 프로그램이 처음 설치될 때 실행됩니다.
+        chrome.storage.sync.set(defaultOptionValues, function() {
+            console.log("Initial settings saved.");
+        });
+    } else if (details.reason == "update") {
+        // 각 키별로 체크합니다.
+        for (let key in defaultOptionValues) {
+            chrome.storage.sync.get(key, function(result) {
+                if (!result[key]) {
+                    // 해당 키의 값이 없는 경우 초기값으로 설정합니다.
+                    let obj = {};
+                    obj[key] = defaultOptionValues[key];
+                    chrome.storage.sync.set(obj, function() {
+                        console.log(`Default value set for ${key} after update.`);
+                    });
+                }
+            });
+        }
     }
 });

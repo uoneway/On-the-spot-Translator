@@ -46,12 +46,13 @@ async function restoreOptions() {
   for (const [key, defaultValue] of Object.entries(defaultOptionValues)) {
     const value = await new Promise(resolve => {
       chrome.storage.sync.get([key], result => {
-        if (result[key] === undefined) {
-          chrome.storage.sync.set({ [key]: defaultValue });
-          resolve(defaultValue);
-        } else {
-          resolve(result[key]);
-        }
+        resolve(result[key]);
+        // if (result[key] === undefined) {
+        //   chrome.storage.sync.set({ [key]: defaultValue });
+        //   resolve(defaultValue);
+        // } else {
+        //   resolve(result[key]);
+        // }
       });
     });
     
