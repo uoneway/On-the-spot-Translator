@@ -123,7 +123,7 @@ async function insertSpotBox(clickedElement) {
 
         if (text.length > MAX_REQ_LEN) {
             let error_text = "Only can translate up to " + MAX_REQ_LEN + " characters at once."
-            // console.error(error_text)
+            console.log(error_text)
             $(spot_box).text(error_text);
             return false
         }
@@ -132,7 +132,6 @@ async function insertSpotBox(clickedElement) {
 
     } finally {
         $(".borderBox").remove();
-        // console.log(spotBox);
     }
 }
 
@@ -157,11 +156,11 @@ async function req_server(reqType, srcText, tgtBoxCls) {
                 textHtml = `<span>${response.text}</span>`;
                 $(tgtBoxCls).html(iconHtml + textHtml);
             } else {
-                if (response.status_msg != undefined) {  // heroku는 괜찮은데 papago 문제일 때
+                if (response.status_msg != undefined) {
                     textHtml = `<span>${response.status_msg}</span>`;
                     $(tgtBoxCls).html(iconHtml + textHtml);
                 } else {
-                    console.log(response.error);
+                    console.error(response.error);
                     $(tgtBoxCls).text(response.error);
                 }
             }

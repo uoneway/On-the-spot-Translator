@@ -22,7 +22,7 @@ class Translator {
         if (!src_text) {
             throw new Error('Search src_text should be provided as lookup arguments');
         }
-        console.log("options:", options);
+
         let translator_client_info;
         if (options.switch_deepl && options.deepl_api_key) {
             translator_client_info = {
@@ -60,7 +60,6 @@ class Translator {
         });
 
         const data = await response.json();
-        console.log("Translation response:", data);
         return data;
     }
 }
@@ -69,6 +68,9 @@ let translator = new Translator();
 
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     if (request.reqType == "spot") {
+        console.log("Request:", request);
+        console.log("Current Option:", options);
+
         translator.translate(request.srcText)
             .then(response => {
                 console.log("Translation response:", response);
@@ -104,7 +106,7 @@ chrome.runtime.onInstalled.addListener(function(details) {
     if (details.reason == "install") {
         // 이 확장 프로그램이 처음 설치될 때 실행됩니다.
         chrome.storage.sync.set(defaultOptionValues, function() {
-            console.log("Initial settings saved.");
+            console.log("Set up default settings.");
         });
     } else if (details.reason == "update") {
         // 각 키별로 체크합니다.
