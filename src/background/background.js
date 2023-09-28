@@ -79,8 +79,9 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
             .catch(error => {
                 console.error("Translation error:", error);
                 sendResponse({
-                    "text": "Translation error",
+                    "text": null,
                     "status_msg": error.message,
+                    "translator_type": null
                 });
             });
         return true;  // Indicates that the response is sent asynchronously

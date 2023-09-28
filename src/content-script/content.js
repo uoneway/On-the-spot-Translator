@@ -150,20 +150,20 @@ async function req_server(reqType, srcText, tgtBoxCls) {
             }
             
             const iconHtml = `<span><img src="${chrome.runtime.getURL(iconPath)}" alt="Icon"></span>`;
-            let textHtml;
-
-            if (response.text != undefined) {  // ok
-                textHtml = `<span>${response.text}</span>`;
-                $(tgtBoxCls).html(iconHtml + textHtml);
-            } else {
-                if (response.status_msg != undefined) {
-                    textHtml = `<span>${response.status_msg}</span>`;
-                    $(tgtBoxCls).html(iconHtml + textHtml);
-                } else {
-                    console.error(response.error);
-                    $(tgtBoxCls).text(response.error);
-                }
+            let textHtml='';
+            
+            if (response.text != undefined) {
+                textHtml += iconHtml + `<span>${response.text}</span>`;
             }
+            // response.text가 있는, 즉 번역된 경우에도 status_msg가 있는 경우가 있음
+            if (response.status_msg != undefined) {
+                textHtml += `<div class="errorBox">${response.status_msg}</div>`;
+            }
+            if (textHtml == ''){ //(response.text == undefined && response.status_msg == undefined) {
+                textHtml += `<div class="errorBox">${response.error}</div>`;
+                console.error(response.error);
+            }
+            $(tgtBoxCls).html(textHtml);
         });
 }
 

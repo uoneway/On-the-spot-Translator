@@ -33,7 +33,7 @@ addChangeListener(optionsForm.papago_secret_key, 'papago_secret_key');
 const defaultOptionValues = {
   meta_key: 'Alt',
   main_lang: 'ko',
-  sub_lang: 'en',
+  sub_lang: 'en-us',
   deepl_api_key: '',
   switch_deepl: false,
   papago_api_key: '',
@@ -97,3 +97,23 @@ $(function () {
       }
   });
 });
+
+
+document.addEventListener("DOMContentLoaded", function () {
+    const mainLangSelect = document.getElementById("main_lang");
+    const subLangSelect = document.getElementById("sub_lang");
+
+    function updateSubLangOptions() {
+        const selectedMainLang = mainLangSelect.value;
+        
+        subLangSelect.querySelectorAll('option').forEach(option => {
+            option.disabled = option.value === selectedMainLang;
+        });
+    }
+
+    mainLangSelect.addEventListener('change', updateSubLangOptions);
+
+    // 페이지 로드 시 subLang의 옵션을 초기화
+    updateSubLangOptions();
+});
+
