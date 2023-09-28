@@ -1,10 +1,10 @@
 {
   "appName": {
-    "message": "On the spot Translator",
+    "message": "Spot Translator",
     "description": "The title of the application, displayed in the web store."
   },
   "appDesc": {
-    "message": "Just click and get the translation right below which keeps named entity in the original text.",
+    "message": "Just click and get the translation right below.",
     "description": "The description of the application, displayed in the web store."
   }
 }

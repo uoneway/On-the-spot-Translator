@@ -1,12 +1,12 @@
-# On the spot Translator (Chrome Extension)
+# Spot Translator (Chrome Extension)
 
-<a href="https://chrome.google.com/webstore/detail/on-the-spot-translator/bgljcgcfhppljahbdkfgeldgfdjknpfa" target="_blank"><img src="images/icon.png" height="100px" align="right"/></a>
+<a href="https://chrome.google.com/webstore/detail/bgljcgcfhppljahbdkfgeldgfdjknpfa" target="_blank"><img src="images/icon.png" height="100px" align="right"/></a>
 
-**Chrome extension** for **on the spot Translator**
+**Chrome extension** for **Spot Translator**
 
 **Just click and get the translation right below which keeps named entity in the original text.**
 
-Install from ["On the spot Translator" page in Chrome Web Store](https://chrome.google.com/webstore/detail/on-the-spot-translator/bgljcgcfhppljahbdkfgeldgfdjknpfa)
+Install from ["Spot Translator" page in Chrome Web Store](https://chrome.google.com/webstore/detail/bgljcgcfhppljahbdkfgeldgfdjknpfa)
 
 ## Usage & Features
 
@@ -28,7 +28,7 @@ Install from ["On the spot Translator" page in Chrome Web Store](https://chrome.
 
 ## Installation & Setting
 
-1. Download the ["On the spot Translator" in Chrome Web Store](https://chrome.google.com/webstore/detail/on-the-spot-translator/bgljcgcfhppljahbdkfgeldgfdjknpfa)
+1. Download the ["Spot Translator" in Chrome Web Store](https://chrome.google.com/webstore/detail/bgljcgcfhppljahbdkfgeldgfdjknpfa)
 
 2. Get a Naver Papago API key and enter Put it in the extension option.
 
@@ -37,7 +37,7 @@ Install from ["On the spot Translator" page in Chrome Web Store](https://chrome.
    - Get the application `Client ID` and `Client Secret` of Naver developers center.
    - Enter them in this extension option.
 
-For more detailed, see [this link](https://www.notion.so/uoneway/On-the-spot-Translator-1826d87aa2d845d093793cee0ca11b29).
+For more detailed, see [this link](https://uoneway.notion.site/Spot-Translator-1826d87aa2d845d093793cee0ca11b29).
 
 
 ## Update plan
