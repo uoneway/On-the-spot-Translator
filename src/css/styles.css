@@ -22,7 +22,7 @@
 .spotBox img{
     background-color: transparent;
     border: none;
-    padding: 0;
+    padding: 0px 5px 0px 0px;
     vertical-align: middle;
     height: 1.6em;
     float: left;

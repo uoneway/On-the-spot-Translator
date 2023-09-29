@@ -149,7 +149,7 @@ async function req_server(reqType, srcText, tgtBoxCls) {
                 iconPath = '../images/icon.png';
             }
             
-            const iconHtml = `<span><img src="${chrome.runtime.getURL(iconPath)}" alt="Icon"></span>`;
+            const iconHtml = `<div><img src="${chrome.runtime.getURL(iconPath)}" alt="Icon"></div>`;
             let textHtml='';
             
             if (response.text != undefined) {
