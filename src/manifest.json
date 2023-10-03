@@ -28,9 +28,6 @@
         "content-script/external/jquery-3.7.1.min.js",
         "content-script/content.js"
       ],
-      "css": [
-        "css/styles.css"
-      ],
       "run_at": "document_start"
     }
   ],

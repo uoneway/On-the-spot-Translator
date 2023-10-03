@@ -5,6 +5,44 @@ const translatorIcon = {
     'google':'../images/translator_icons/google_icon.png'
   };
 
+// 사이트에 insert됨으로 가장 우선적으로 적용되어야 함 -> CSS 파일을 쓰지 않고 inline+important로 적용
+  const sourceBoxStyle = `
+    position: absolute !important;
+    border: dashed 2px #9a60bd !important;
+    border-radius: 5px !important;
+    padding: 15px !important;
+    z-index: 99999 !important;
+    pointer-events: none !important;
+`
+  const spotBoxStyle = `
+  border: solid 2px #9a60bd !important;
+  background-color: white !important;
+  color: black !important;
+  border-radius: 5px !important;
+  padding: 5px !important;
+  z-index: 99999 !important;
+  pointer-events: none !important;
+  font-size: 90% !important;
+  display: flex !important;
+align-items: center !important;
+  `
+  const imgStyle = `
+  background-color: transparent !important;
+  border: none !important;
+  padding: 0px !important;
+  margin: 0px 5px 0px 0px !important;
+  height: 1em !important;
+  max-height: 30px !important;
+  max-width: 30px !important;
+  float: left !important;
+  `
+const errorBoxStyle = `
+  font-style: italic !important;
+  background-color: #242424 !important;
+  color: white !important;
+  margin-top: 10px !important;
+`
+
 // let spotWorks;
 let metaKey;
 updateMetaKey();
@@ -77,6 +115,7 @@ function drawSourceBox(overedElement) {
     let rect = overedElement.getBoundingClientRect();
     let sourceBox = document.createElement("div");
     sourceBox.className = "sourceBox";
+    sourceBox.style.cssText += sourceBoxStyle;
     sourceBox.style.top = (rect.top + window.scrollY) + "px";
     sourceBox.style.left = (rect.left + window.scrollX) + "px";
     sourceBox.style.width = (rect.width - 4) + "px";
@@ -110,8 +149,10 @@ document.addEventListener("DOMContentLoaded", function () {
 
 async function insertSpotBox(clickedElement) {
 
+
     let spot_box = document.createElement("div");
     spot_box.className = "spotBox";
+    spot_box.style.cssText = spotBoxStyle
 
     let text = getText(clickedElement.firstChild, "\n")
     if (text.length == 0) {
@@ -143,13 +184,17 @@ async function req_server(reqType, srcText, tgtBoxCls) {
     },
         function (response) {
             let iconPath;
+            let imgTitle;
             if (translatorIcon[response.translator_type]) {
                 iconPath = translatorIcon[response.translator_type];
+                imgTitle = response.translator_type;
             } else {
                 iconPath = '../images/icon.png';
+                imgTitle = 'Spot Translator';
             }
             
-            const iconHtml = `<div><img src="${chrome.runtime.getURL(iconPath)}" alt="Icon"></div>`;
+            const iconHtml = `<div><img title="${imgTitle}" src="${chrome.runtime.getURL(iconPath)}" 
+                            alt="Icon" style="${imgStyle}"></div>`;
             let textHtml='';
             
             if (response.text != undefined) {
@@ -157,10 +202,10 @@ async function req_server(reqType, srcText, tgtBoxCls) {
             }
             // response.text가 있는, 즉 번역된 경우에도 status_msg가 있는 경우가 있음
             if (response.status_msg != undefined) {
-                textHtml += `<div class="errorBox">${response.status_msg}</div>`;
+                textHtml += `<div class="errorBox" style="${errorBoxStyle}">${response.status_msg}</div>`;
             }
             if (textHtml == ''){ //(response.text == undefined && response.status_msg == undefined) {
-                textHtml += `<div class="errorBox">${response.error}</div>`;
+                textHtml += `<div class="errorBox" style="${errorBoxStyle}">${response.error}</div>`;
                 console.error(response.error);
             }
             $(tgtBoxCls).html(textHtml);
