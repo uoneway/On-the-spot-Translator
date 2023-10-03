@@ -36,6 +36,7 @@ h4 {
     text-align: left;
     border-top: 2px solid #9a60bd;
 }
+
 .descript {
     font-size: 15px;
     display: block;
@@ -94,9 +95,10 @@ label.input_label {
     display: block;
 }
 
-.api-info h4{
+.api-info h4 {
     display: flex;
-    align-items: center; /* 세로 중앙 정렬 */
+    align-items: center;
+    /* 세로 중앙 정렬 */
 }
 
 .switch {
@@ -166,7 +168,7 @@ label.input_label {
     width: 15px;
     height: 15px;
     padding: 0px 10px;
-    pointer-events: auto;  
+    pointer-events: auto;
 }
 
 .tooltip .tooltiptext {
