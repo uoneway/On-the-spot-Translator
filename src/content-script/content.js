@@ -201,43 +201,60 @@ async function insertSpotBox(clickedElement) {
 
 //goes to bg_page.js. 크롬 익스텐션에서는 그냥 sendMessage 보내면 backgroud.js로 보내는걸로 정해져 있는듯함
 async function req_server(reqType, srcText, tgtBoxCls) {
-  await chrome.runtime.sendMessage(
-    {
-      reqType: reqType,
-      srcText: srcText,
-    },
-    function (response) {
-      let iconPath;
-      let imgTitle;
-      if (translatorIcon[response.translator_type]) {
-        iconPath = translatorIcon[response.translator_type];
-        imgTitle = response.translator_type;
-      } else {
-        iconPath = "../images/icon.png";
-        imgTitle = "Spot Translator";
-      }
+  try {
+    const response = await new Promise((resolve, reject) => {
+      chrome.runtime.sendMessage(
+        {
+          reqType: reqType,
+          srcText: srcText,
+        },
+        (res) => {
+          if (chrome.runtime.lastError) {
+            reject(new Error(chrome.runtime.lastError));
+          } else {
+            resolve(res);
+          }
+        }
+      );
+    });
 
-      const iconHtml = `<div><img title="${imgTitle}" src="${chrome.runtime.getURL(
-        iconPath
-      )}" 
-                            alt="Icon" style="${imgStyle}"></div>`;
-      let textHtml = "";
-
-      if (response.text != undefined) {
-        textHtml += iconHtml + `<span>${response.text}</span>`;
-      }
-      // response.text가 있는, 즉 번역된 경우에도 status_msg가 있는 경우가 있음
-      if (response.status_msg != undefined) {
-        textHtml += `<div class="errorBox" style="${errorBoxStyle}">${response.status_msg}</div>`;
-      }
-      if (textHtml == "") {
-        //(response.text == undefined && response.status_msg == undefined) {
-        textHtml += `<div class="errorBox" style="${errorBoxStyle}">${response.error}</div>`;
-        console.error(response.error);
-      }
-      $(tgtBoxCls).html(textHtml);
+    // Set default values
+    let iconPath = "../images/icon.png";
+    let imgTitle = "Spot Translator";
+    if (translatorIcon[response.translator_type]) {
+      iconPath = translatorIcon[response.translator_type];
+      imgTitle = response.translator_type;
     }
-  );
+
+    const iconHtml = `
+          <div>
+              <img title="${imgTitle}" src="${chrome.runtime.getURL(
+      iconPath
+    )}" alt="Icon" style="${imgStyle}">
+          </div>
+      `;
+
+    let textHtml = iconHtml;
+
+    if (response.text) {
+      textHtml += `<span>${response.text}</span>`;
+    }
+
+    if (response.status_msg) {
+      textHtml += `<div class="errorBox" style="${errorBoxStyle}">${response.status_msg}</div>`;
+    }
+
+    if (!response.text && !response.status_msg) {
+      textHtml += `<div class="errorBox" style="${errorBoxStyle}">Unexpected error: ${JSON.stringify(
+        response
+      )}</div>`;
+      console.error(response);
+    }
+
+    $(tgtBoxCls).html(textHtml);
+  } catch (error) {
+    console.error("Error in req_server:", error);
+  }
 }
 
 function getText(node, lineSeparator) {
