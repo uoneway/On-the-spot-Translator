@@ -1,11 +1,35 @@
-let options;
-updateOptions();
+ const defaultOptionValues = {
+    meta_key: 'Alt',
+    main_lang: 'ko',
+    sub_lang: 'en',
+    deepl_api_key: '',
+    switch_deepl: false,
+    papago_api_key: '',
+    papago_secret_key: '',
+    switch_papago: false,
+  };
 
-function updateOptions() {
-    chrome.storage.sync.get(null, function (_options) {
-        options = _options;
+let options = {};
+
+function getOptionsFromStorage(defaults) {
+    return new Promise((resolve, reject) => {
+        chrome.storage.sync.get(defaults, (result) => {
+            if (chrome.runtime.lastError) {
+                reject(new Error(chrome.runtime.lastError));
+            } else {
+                resolve(result);
+            }
+        });
     });
 }
+
+async function updateOptions() {
+    options = await getOptionsFromStorage(defaultOptionValues);
+}
+(async function() {
+    await updateOptions();
+})();
+
 
 chrome.storage.onChanged.addListener(function (changes, areaName) {
     if (areaName == "sync") {
@@ -92,36 +116,15 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 
 
 chrome.runtime.onInstalled.addListener(function(details) {
-    // Default values for each key
-    const defaultOptionValues = {
-        meta_key: 'Alt',
-        main_lang: 'ko',
-        sub_lang: 'en',
-        deepl_api_key: '',
-        switch_deepl: false,
-        papago_api_key: '',
-        papago_secret_key: '',
-        switch_papago: false,
-      };
-
     if (details.reason == "install") {
         // 이 확장 프로그램이 처음 설치될 때 실행됩니다.
         chrome.storage.sync.set(defaultOptionValues, function() {
-            console.log("Set up default settings.");
+            console.log("Newly installed! Set up as default settings.");
         });
     } else if (details.reason == "update") {
-        // 각 키별로 체크합니다.
-        for (let key in defaultOptionValues) {
-            chrome.storage.sync.get(key, function(result) {
-                if (!result[key]) {
-                    // 해당 키의 값이 없는 경우 초기값으로 설정합니다.
-                    let obj = {};
-                    obj[key] = defaultOptionValues[key];
-                    chrome.storage.sync.set(obj, function() {
-                        console.log(`Default value set for ${key} after update.`);
-                    });
-                }
-            });
-        }
+        updateOptions();
+        chrome.storage.sync.set(options, function() {
+            console.log("Updated! Set up as default settings if needed");
+        });
     }
 });
