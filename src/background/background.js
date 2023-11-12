@@ -1,7 +1,7 @@
 const defaultOptionValues = {
   meta_key: "Alt",
   main_lang: "ko",
-  sub_lang: "en",
+  sub_lang: "en-us",
   deepl_api_key: "",
   switch_deepl: false,
   papago_api_key: "",
@@ -11,7 +11,7 @@ const defaultOptionValues = {
 
 let options = {};
 
-function getOptionsFromStorage(defaults) {
+async function getOptionsFromStorage(defaults) {
   return new Promise((resolve, reject) => {
     chrome.storage.sync.get(defaults, (result) => {
       if (chrome.runtime.lastError) {
@@ -26,15 +26,18 @@ function getOptionsFromStorage(defaults) {
 async function updateOptions() {
   options = await getOptionsFromStorage(defaultOptionValues);
 }
-(async function () {
+
+// 최초 실행 시 옵션 업데이트
+(async function initialize() {
   await updateOptions();
 })();
 
 chrome.storage.onChanged.addListener(function (changes, areaName) {
-  if (areaName == "sync") {
+  if (areaName === "sync") {
     updateOptions();
   }
 });
+
 class Translator {
   // static url = "http://127.0.0.1:8000/translate";
   static url =
@@ -45,7 +48,7 @@ class Translator {
 
   async translate(src_text) {
     if (!src_text) {
-      throw new Error("Search src_text should be provided as lookup arguments");
+      throw new Error("Source text should be provided as lookup arguments");
     }
 
     let translator_client_info;
@@ -56,8 +59,8 @@ class Translator {
       };
     } else if (
       options.switch_papago &&
-      options.papago_secret_key &&
-      options.papago_api_key
+      options.papago_api_key &&
+      options.papago_secret_key
     ) {
       translator_client_info = {
         translator_type: "papago",
@@ -76,8 +79,8 @@ class Translator {
         tgt_lang: null,
       },
       user_option: {
-        main_tgt_lang: options.main_lang,
-        sub_tgt_lang: options.sub_lang,
+        main_tgt_lang: options.main_lang || defaultOptionValues.main_lang,
+        sub_tgt_lang: options.sub_lang || defaultOptionValues.sub_lang,
         translator_client_info: translator_client_info,
       },
     });
@@ -96,9 +99,8 @@ class Translator {
 let translator = new Translator();
 
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-  if (request.reqType == "spot") {
+  if (request.reqType === "spot") {
     console.log("Request:", request);
-    console.log("Current Option:", options);
 
     translator
       .translate(request.srcText)
@@ -115,21 +117,17 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
         });
       });
     return true; // Indicates that the response is sent asynchronously
-  } else if (request.reqType == "whole") {
-    // TO-DO
   }
+  // TODO: 다른 요청 유형 처리 (예: "whole")
 });
 
 chrome.runtime.onInstalled.addListener(function (details) {
-  if (details.reason == "install") {
-    // 이 확장 프로그램이 처음 설치될 때 실행됩니다.
+  if (details.reason === "install") {
     chrome.storage.sync.set(defaultOptionValues, function () {
-      console.log("Newly installed! Set up as default settings.");
+      console.log("Newly installed! Set up with default settings.");
+      updateOptions();
     });
-  } else if (details.reason == "update") {
+  } else if (details.reason === "update") {
     updateOptions();
-    chrome.storage.sync.set(options, function () {
-      console.log("Updated! Set up as default settings if needed");
-    });
   }
 });
