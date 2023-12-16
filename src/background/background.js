@@ -40,8 +40,7 @@ chrome.storage.onChanged.addListener(function (changes, areaName) {
 
 class Translator {
   // static url = "http://127.0.0.1:8000/translate";
-  static url =
-    "https://port-0-on-the-spot-translator-api-fastapi-p8xrq2mlfpd1iik.sel3.cloudtype.app/translate";
+  static url = "http://158.179.194.39:8000/translate";
   static headers = {
     "content-type": "application/json; charset=UTF-8",
   };
